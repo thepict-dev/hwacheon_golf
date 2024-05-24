@@ -1,0 +1,66 @@
+@charset "utf-8";
+
+.fullcalendar {clear: both; padding-top: 20px;}
+.fullcalendar .fc-body {border: 1px solid #ddd;}
+.fullcalendar .fc-ltr .fc-dayGrid-view .fc-today .fc-day-number {color: #111;}
+.fullcalendar .fc-row.fc-rigid .fc-content-skeleton, .fullcalendar .fc-row .fc-content-skeleton {height: 100%; padding: 0; text-align: center;}
+.fullcalendar .fc-head td, .fullcalendar .fc-head-container th, .fullcalendar .fc-bg td {border: 1px solid #ddd;}
+.fullcalendar .fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number {text-align: left; display: block;}
+.fullcalendar .fc-content-skeleton .fc-day-top {padding: 5px 10px;}
+.fullcalendar .fc-bg td.complete {background-color: #f7f7f7;}
+.fullcalendar .fc-bg td.complete.fc-today {background: #cda46a;}
+.fullcalendar .fc-event-container {padding: 5px 10px; position: relative;}
+.fullcalendar .fc-event {position: relative; color: #000; background: none; text-align: left; border: none; border-bottom: 1px solid #ddd; line-height: 25px; border-radius: inherit; margin: 0 auto; max-width: 120px; padding-left: 10px;}
+.fullcalendar .fc-event:before {position: absolute; content: ''; left: 0; top: 11px; width: 3px; height: 3px; border-radius: 50%; background: #000;}
+.fullcalendar .fc-button-primary {width: 40px; height: 40px; background-color: #fff; border: 1px solid #ddd; border-radius: inherit;}
+.fullcalendar .fc-button-primary.fc-prevYear-button {background: url('/_user/img/ico-cal-first.png') 50% no-repeat; background-size: 14px;}
+.fullcalendar .fc-button-primary.fc-prev-button {background: url('/_user/img/ico-cal-prev.png') 50% no-repeat; background-size: 8px 14px;}
+.fullcalendar .fc-button-primary.fc-next-button {background: url('/_user/img/ico-cal-next.png') 50% no-repeat; background-size: 8px 14px;}
+.fullcalendar .fc-button-primary.fc-nextYear-button {background: url('/_user/img/ico-cal-last.png') 50% no-repeat; background-size: 14px;}
+.fullcalendar .fc-button .fc-icon {display: none;}
+.fullcalendar .fc-button.fc-button-primary:focus {border-color: #ff6231; background-color: #fff; outline: none; box-shadow: none; -webkit-box-shadow: none;}
+.fullcalendar .fc-center h2 {font-size: 36px; color: #111; letter-spacing: 0; font-weight: 700;}
+.fullcalendar .fc-toolbar.fc-header-toolbar {margin-bottom: 20px;}
+.fullcalendar .fc table {font-size: 16px; letter-spacing: 0; background: #fff;}
+.fullcalendar .fc-day-header {color: #111; font-weight: 500; padding: 9px;}
+.fullcalendar .fc-day-number {color: #111;}
+.fullcalendar .fc-sun .fc-day-number {color: #ff0000;}
+.fullcalendar .fc-sat .fc-day-number {color: #97b9d5;}
+.fullcalendar .fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number {font-size: 16px;}
+
+/*토요의병놀이마당*/
+.fullcalendar.playground  .fc-scroller.fc-day-grid-container {height: auto !important; overflow: hidden;}
+.fullcalendar.playground .fc-dayGrid-view .fc-body .fc-row {height: 111px !important;}
+.fullcalendar.playground .fc-event .person {float: right;}
+.fullcalendar.playground .fc-event .person.over {color: #ae0000;}
+.fullcalendar.playground .fc-event-container .link {position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 100%; max-width: 131px; height: 72px; z-index: 5;}
+
+@media screen and (max-width: 1250px) {
+    .fullcalendar.playground .fc-dayGrid-view .fc-body .fc-row {height: 95px !important;}
+    .fullcalendar .fc-event-container {padding: 2px 10px;}
+    .fullcalendar .fc-event {font-size: 12px;}
+    .fullcalendar.playground .fc-event-container .link {height: 60px;}
+}
+
+/*전체 일정*/
+.fullcalendar.cal  .fc-scroller.fc-day-grid-container {height: auto !important; overflow: hidden;}
+.fullcalendar.cal .fc-dayGrid-view .fc-body .fc-row {height: 111px !important;}
+.fullcalendar.cal .fc .fc-row .fc-content-skeleton table {height: 100%;}
+.fullcalendar.cal .fc-content-skeleton tbody {height: 100%;}
+.fullcalendar.cal .fc-content-skeleton tr {height: 100%;}
+.fullcalendar.cal .fc-event-container {position: relative;}
+.fullcalendar.cal .fc-content-skeleton .fc-event {top: 50px; width: 15px; height: 15px; padding: 0; float: right; border: none;}
+.fullcalendar.cal .fc-event:before {display: none;}
+.cal .fc-content {
+    height: 15px;
+    border-radius: 50%;
+}
+.cal .fc-content .fc-title {display: block;width: 15px;height: 15px;background: #fc4c7a;text-indent: -9999px;position: absolute;}
+.cal .fc-content .fc-title.possible {background: #3f6be0;}
+@media screen and (max-width: 1250px) {
+    .fullcalendar.cal .fc-dayGrid-view .fc-body .fc-row {height: 70px !important;}
+    .fullcalendar.cal .fc-content-skeleton .fc-event {top: 17px;}
+}
+
+/* 단체해설 */
+.fullcalendar .fc-more {display:block;margin: 3px 10px;background: #d2a178;line-height: 24px;border-radius: 3px;color: #fff;font-size: 16px;}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="atchMapper">
+	<select id="selectAtchList" parameterType="AtchVO" resultType="AtchVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				ATCH_ID,
+				ATCH_TITLE,
+				ATCH_CONTENT,
+				ATCH_FILE_ID,
+				REG_ID,
+				DATE_FORMAT(REG_DATE,'%Y-%m-%d') AS REG_DATE,
+				UPD_ID,
+				DATE_FORMAT(UPD_DATE,'%Y-%m-%d') AS UPD_DATE
+			FROM SPW_ATCH
+			WHERE USE_FLAG = 'Y'
+			<!-- 키워드 검색 -->
+	    	<if test="searchWrd != null and searchWrd != ''">
+				<choose>
+					<when test="searchCnd == 1">
+						AND (ATCH_TITLE LIKE CONCAT ('%',#{searchWrd},'%') OR ATCH_CONTENT LIKE CONCAT ('%',#{searchWrd},'%') )
+					</when>
+					<when test="searchCnd == 2">
+						AND ATCH_TITLE LIKE CONCAT ('%',#{searchWrd},'%')
+					</when>
+					<when test="searchCnd == 3">
+						AND ATCH_CONTENT LIKE CONCAT ('%',#{searchWrd},'%')
+					</when>
+				</choose>
+			</if>
+			<!-- 키워드 검색 -->
+			ORDER BY REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectAtchListCnt" parameterType="AtchVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(a.ATCH_ID)
+		FROM
+			SPW_ATCH a
+		WHERE
+			USE_FLAG = 'Y'
+			<!-- 키워드 검색 -->
+	    	<if test="searchWrd != null and searchWrd != ''">
+				<choose>
+					<when test="searchCnd == 1">
+						AND (a.ATCH_TITLE LIKE CONCAT ('%',#{searchWrd},'%') OR a.ATCH_CONTENT LIKE CONCAT ('%',#{searchWrd},'%') )
+					</when >
+					<when test="searchCnd == 2">
+						AND a.ATCH_TITLE LIKE CONCAT ('%',#{searchWrd},'%')
+					</when >
+					<when test="searchCnd == 3">
+						AND a.ATCH_CONTENT LIKE CONCAT ('%',#{searchWrd},'%')
+					</when >
+				</choose>
+			</if>
+			<!-- 키워드 검색 -->
+	</select>
+	
+	<select id="selectAtchView" parameterType="AtchVO" resultType="AtchVO">
+		SELECT
+			ATCH_ID,
+			ATCH_TITLE,
+			ATCH_CONTENT,
+			ATCH_FILE_ID,
+			REG_ID,
+			DATE_FORMAT(REG_DATE,'%Y-%m-%d') AS REG_DATE,
+			UPD_ID,
+			DATE_FORMAT(UPD_DATE,'%Y-%m-%d') AS UPD_DATE
+		FROM
+			SPW_ATCH a
+		WHERE
+			ATCH_ID = #{atchId}
+		AND
+			USE_FLAG = 'Y'
+	</select>
+	
+	<insert id="atchInsert" parameterType="AtchVO">
+		<selectKey resultType="String" keyProperty="atchId" order="BEFORE">
+			SELECT #{atchId} AS atchId FROM dual
+		</selectKey>
+		INSERT INTO SPW_ATCH
+			(ATCH_ID, ATCH_TITLE, ATCH_CONTENT, ATCH_FILE_ID, REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG)
+		VALUES
+			(#{atchId}, #{atchTitle}, #{atchContent}, #{atchFileId}, #{regId}, NOW(), #{updId}, NOW(), 'Y')
+	</insert>
+	
+	<update id="atchUpdate" parameterType="AtchVO">
+		UPDATE
+			SPW_ATCH
+		SET
+			ATCH_TITLE = #{atchTitle},
+			ATCH_CONTENT = #{atchContent},
+			ATCH_FILE_ID = #{atchFileId},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			ATCH_ID = #{atchId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<update id="atchDelete" parameterType="AtchVO">
+		UPDATE
+			SPW_ATCH
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			ATCH_ID = #{atchId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	
+</mapper>

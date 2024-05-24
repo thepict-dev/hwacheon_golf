@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="codeMapper">
+	<select id="selectCodeMstrList" parameterType="CodeVO" resultType="CodeVO">
+
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				CODEMASTER_ID, CODEMASTER_NAME, DATE_FORMAT(REG_DATE, '%Y-%m-%d') as REG_DATE, USE_FLAG
+			FROM
+				SPW_CODEMASTER
+			WHERE 1=1
+			AND
+				USE_FLAG = 'Y'
+
+			<if test="searchCnd == 0">AND
+					(CODEMASTER_ID LIKE CONCAT ('%', #{searchWrd},'%') OR CODEMASTER_NAME LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test="searchCnd == 1">AND
+					CODEMASTER_ID LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 2">AND
+					CODEMASTER_NAME LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			ORDER BY REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+						
+	</select>
+	
+	<select id="selectCodeMstrListCnt" parameterType="CodeVO" resultType="java.lang.Integer">
+
+		SELECT 
+			COUNT(CODEMASTER_ID)
+		FROM
+			SPW_CODEMASTER
+		WHERE 1=1
+		AND
+			USE_FLAG = 'Y'
+
+		<if test="searchCnd == 0">AND
+				(CODEMASTER_ID LIKE CONCAT ('%', #{searchWrd},'%') OR CODEMASTER_NAME LIKE CONCAT ('%', #{searchWrd},'%')) 		
+		</if>
+		<if test="searchCnd == 1">AND
+				CODEMASTER_ID LIKE CONCAT ('%', #{searchWrd},'%') 		
+		</if>
+		<if test="searchCnd == 2">AND
+				CODEMASTER_NAME LIKE CONCAT ('%', #{searchWrd},'%') 		
+		</if>
+
+	</select>	
+ 
+	<select id="selectCodeMstrDetail" parameterType="CodeVO" resultType="CodeVO">
+
+			SELECT
+				CODEMASTER_ID, CODEMASTER_NAME, REG_ID, DATE_FORMAT(REG_DATE, '%Y-%m-%d') as REG_DATE, USE_FLAG
+			FROM
+				SPW_CODEMASTER		
+			WHERE 1=1
+			<if test="codeMasterId != null and !codeMasterId.equals('')">
+			AND 
+				CODEMASTER_ID = #{codeMasterId}
+			</if>					
+			AND 
+				USE_FLAG = 'Y'
+
+	</select>
+
+	<insert id="codeMasterInsert" parameterType="CodeVO">
+
+			INSERT INTO SPW_CODEMASTER
+			(CODEMASTER_ID, CODEMASTER_NAME, REG_ID, REG_DATE, USE_FLAG)
+			VALUES
+			(#{codeMasterId}, #{codeMasterName}, #{regId}, SYSDATE(), 'Y')
+
+	</insert>
+	
+ 	<update id="codeMasterUpdate" parameterType="CodeVO">
+ 		
+			UPDATE SPW_CODEMASTER SET 
+				CODEMASTER_NAME = #{codeMasterName},
+				UPD_ID = #{updId},
+				UPD_DATE = SYSDATE()
+			WHERE CODEMASTER_ID = #{codeMasterId}
+ 		
+ 	</update>
+
+ 	<update id="codeMasterDelete" parameterType="CodeVO">
+ 		
+			UPDATE SPW_CODEMASTER SET 
+				USE_FLAG = 'N',
+				UPD_ID = #{updId},
+				UPD_DATE = SYSDATE()
+			WHERE CODEMASTER_ID = #{codeMasterId}
+ 		
+ 	</update>
+	
+	<select id="selectCodeList" parameterType="CodeVO" resultType="CodeVO">
+
+		SELECT
+			a.CODEMASTER_ID, a.CODE_ID, a.CODE_NAME, a.CODE_ORDER
+		FROM
+			SPW_CODE a
+		LEFT OUTER JOIN SPW_CODEMASTER b
+		ON a.CODEMASTER_ID = b.CODEMASTER_ID
+		WHERE 1=1
+		AND a.CODEMASTER_ID = #{codeMasterId}
+		AND b.USE_FLAG = "Y"
+		ORDER BY a.CODE_ORDER*1 ASC
+						
+	</select>
+	
+	<select id="selectCodeListCnt" parameterType="CodeVO" resultType="java.lang.Integer">
+
+		SELECT
+			COUNT(a.CODEMASTER_ID)
+		FROM
+			SPW_CODE a
+		LEFT OUTER JOIN SPW_CODEMASTER b
+		ON a.CODEMASTER_ID = b.CODEMASTER_ID
+		WHERE 1=1
+		AND a.CODEMASTER_ID = #{codeMasterId}
+		AND b.USE_FLAG = "Y"
+						
+	</select>
+
+	<insert id="codeInsert" parameterType="CodeVO">
+
+		INSERT INTO SPW_CODE
+			(CODEMASTER_ID, CODE_ID, CODE_NAME, CODE_ORDER)
+		VALUES
+			(#{codeMasterId}, #{codeId}, #{codeName}, #{codeOrder})
+	
+	</insert>
+	
+	<delete id="codeDelete" parameterType="CodeVO">
+
+		DELETE FROM SPW_CODE
+		WHERE
+			CODEMASTER_ID = #{codeMasterId}
+
+	</delete>
+	
+	<select id="getCodeName" parameterType="CodeVO" resultType="String">
+		SELECT CODE_NAME FROM SPW_CODE WHERE CODEMASTER_ID = #{codeMasterId} AND CODE_ID = #{codeId}
+	</select>
+	
+</mapper>

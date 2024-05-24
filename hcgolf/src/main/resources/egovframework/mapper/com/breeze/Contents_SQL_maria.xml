@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="contentsMapper">
+
+	<select id="selectContentsList" parameterType="ContentsVO" resultType="ContentsVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+                CONTENTS_ID, CONTENTS_NAME, CONTENTS_TYPE, CONTENTS_STYLE, REG_DATE, UPD_DATE, USE_FLAG
+			FROM SPW_CONTENTS
+			WHERE USE_FLAG = 'Y'
+			<if test="searchWrd != null and searchWrd != ''">
+				<if test="searchCnd == 1">
+					AND (CONTENTS_NAME LIKE CONCAT ('%', #{searchWrd},'%') OR CONTENTS_ID LIKE CONCAT ('%', #{searchWrd},'%'))
+				</if>
+				<if test="searchCnd == 2">
+					AND CONTENTS_NAME LIKE CONCAT ('%', #{searchWrd},'%')
+				</if>
+				<if test="searchCnd == 3">
+					AND CONTENTS_ID LIKE CONCAT ('%', #{searchWrd},'%')
+				</if>
+			</if>
+			ORDER BY REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectContentsListCnt" parameterType="ContentsVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(a.CONTENTS_ID)
+		FROM
+			SPW_CONTENTS a
+		WHERE
+			USE_FLAG = 'Y'
+			<if test="searchWrd != null and searchWrd != ''">
+				<if test="searchCnd == 1">
+					AND (CONTENTS_NAME LIKE CONCAT ('%', #{searchWrd},'%') OR CONTENTS_ID LIKE CONCAT ('%', #{searchWrd},'%'))
+				</if>
+				<if test="searchCnd == 2">
+					AND CONTENTS_NAME LIKE CONCAT ('%', #{searchWrd},'%')
+				</if>
+				<if test="searchCnd == 3">
+					AND CONTENTS_ID LIKE CONCAT ('%', #{searchWrd},'%')
+				</if>
+			</if>
+	</select>
+	
+	<select id="selectContentsView" parameterType="ContentsVO" resultType="ContentsVO">
+		SELECT
+			*
+		FROM
+			SPW_CONTENTS a
+		WHERE
+			CONTENTS_ID = #{contentsId}
+		AND
+			USE_FLAG = 'Y'
+	</select>
+	
+	<insert id="contentsInsert" parameterType="ContentsVO">
+		<selectKey resultType="String" keyProperty="contentsId" order="BEFORE">
+			SELECT #{contentsId} AS contentsId FROM dual
+		</selectKey>
+		INSERT INTO SPW_CONTENTS
+			(CONTENTS_ID, CONTENTS_NAME, LAYOUT_ID, CONTENTS_TYPE,
+			<if test="contentsType.equals('CON')"> CONTENTS_STYLE, CONTENTS_CONTENT, </if>
+			<if test="contentsType.equals('BBS')"> BBS_ID, BBS_HEADER, BBS_FOOTER, </if>
+			<if test="contentsType.equals('URL')"> URL, </if>
+			REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG)
+		VALUES
+			(#{contentsId}, #{contentsName}, #{layoutId}, #{contentsType},
+			<if test="contentsType.equals('CON')"> #{contentsStyle}, #{contentsContent}, </if>
+			<if test="contentsType.equals('BBS')"> #{bbsId}, #{bbsHeader}, #{bbsFooter}, </if>
+			<if test="contentsType.equals('URL')"> #{url}, </if>
+			#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<update id="contentsUpdate" parameterType="ContentsVO">
+		UPDATE
+			SPW_CONTENTS
+		SET
+			CONTENTS_NAME = #{contentsName},
+			LAYOUT_ID = #{layoutId},
+			CONTENTS_TYPE = #{contentsType},
+			<if test="contentsType.equals('CON')">
+				CONTENTS_STYLE = #{contentsStyle},
+				CONTENTS_CONTENT = #{contentsContent},
+			</if>
+			<if test="contentsType.equals('BBS')">
+				BBS_ID = #{bbsId},
+				BBS_HEADER = #{bbsHeader},
+				BBS_FOOTER = #{bbsFooter},
+			</if>
+			<if test="contentsType.equals('URL')">
+				URL = #{url},
+			</if>
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			CONTENTS_ID = #{contentsId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<update id="contentsDelete" parameterType="ContentsVO">
+		UPDATE
+			SPW_CONTENTS
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			CONTENTS_ID = #{contentsId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<insert id="contentsBakInsert" parameterType="ContentsVO">
+		INSERT INTO SPW_CONTENTS_BAK
+		SELECT #{bakContentsId}, A.* FROM SPW_CONTENTS A WHERE A.CONTENTS_ID = #{contentsId}
+	</insert>
+	
+	<select id="selectContentsBakList" parameterType="ContentsVO" resultType="ContentsVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				*
+			FROM
+				SPW_CONTENTS_BAK
+			WHERE
+				CONTENTS_ID = #{contentsId}
+			ORDER BY UPD_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectContentsBakListCnt" parameterType="ContentsVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(a.BAK_CONTENTS_ID)
+		FROM
+			SPW_CONTENTS_BAK a
+		WHERE
+			CONTENTS_ID = #{contentsId}
+	</select>
+	
+	<select id="selectContentsBakView" parameterType="ContentsVO" resultType="ContentsVO">
+		SELECT
+			*
+		FROM
+			SPW_CONTENTS_BAK a
+		WHERE
+			BAK_CONTENTS_ID = #{bakContentsId}
+	</select>
+	
+</mapper>

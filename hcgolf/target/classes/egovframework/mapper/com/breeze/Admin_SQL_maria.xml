@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminMapper">
+
+	
+	<!-- 관리자 로그인 -->
+	<select id="adminLogin" resultType="adminVO">
+		SELECT 
+			*
+		FROM SPW_ADMIN
+		WHERE ADMIN_ID = #{adminId}
+		  AND ADMIN_PW = #{adminPw}
+		  AND USE_FLAG = 'Y'
+	</select>
+	
+	<update id="adminLoginUpdate" parameterType="adminVO">
+		UPDATE SPW_ADMIN
+		SET
+			TRY_IP = #{tryIp}
+			<if test='loginYN == "Y"'>
+				, LAST_IP = #{tryIp}
+			</if>
+		WHERE	ADMIN_ID = #{adminId}
+	</update>
+	
+	<update id="adminStatusUpdate" parameterType="adminVO">
+		UPDATE SPW_ADMIN
+		SET
+			USE_FLAG = #{useFlag}
+		WHERE	ADMIN_ID = #{adminId}
+	</update>
+	
+	<!-- 관리자 페이지 > 보안관리 > 관리자 관리 -->
+	<select id="selectAdminList" parameterType="adminVO" resultType="adminVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				*
+			FROM SPW_ADMIN
+			WHERE 1 = 1
+			AND ADMIN_ID != 'admin'
+			<if test='searchCnd == "0"'>
+				AND (ADMIN_NAME LIKE CONCAT('%', #{searchWrd}, '%') OR ADMIN_ID LIKE CONCAT('%', #{searchWrd}, '%'))
+			</if>
+			<if test='searchCnd == "1"'>
+				AND ADMIN_NAME LIKE CONCAT('%', #{searchWrd}, '%')
+			</if>
+			<if test='searchCnd == "2"'>
+				AND ADMIN_ID LIKE CONCAT('%', #{searchWrd}, '%')
+			</if>
+			ORDER BY REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectAdminListCnt" parameterType="AdminVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(a.ADMIN_ID)
+		FROM
+			SPW_ADMIN a
+		WHERE 1 = 1
+		AND ADMIN_ID != 'admin'
+		<if test='searchCnd == "0"'>
+			AND (ADMIN_NAME LIKE CONCAT('%', #{searchWrd}, '%') OR ADMIN_ID LIKE CONCAT('%', #{searchWrd}, '%'))
+		</if>
+		<if test='searchCnd == "1"'>
+			AND ADMIN_NAME LIKE CONCAT('%', #{searchWrd}, '%')
+		</if>
+		<if test='searchCnd == "2"'>
+			AND ADMIN_ID LIKE CONCAT('%', #{searchWrd}, '%')
+		</if>
+	</select>
+	
+	<select id="selectAdminView" parameterType="AdminVO" resultType="AdminVO">
+		SELECT
+			*
+		FROM
+			SPW_ADMIN a
+		WHERE
+			ADMIN_ID = #{adminId}
+	</select>
+	
+	<insert id="adminInsert" parameterType="AdminVO">
+		INSERT INTO SPW_ADMIN
+			(ADMIN_ID, ADMIN_PW, ADMIN_NAME, ADMIN_ROLE, REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG)
+		VALUES
+			(#{adminId}, #{adminPw}, #{adminName}, #{adminRole}, #{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<update id="adminUpdate" parameterType="AdminVO">
+		UPDATE
+			SPW_ADMIN
+		SET
+			<if test="adminPw != null and adminPw != ''">
+				ADMIN_PW = #{adminPw},
+			</if>
+			ADMIN_NAME = #{adminName}
+			, ADMIN_ROLE = #{adminRole}
+			, UPD_ID = #{updId}
+			, UPD_DATE = SYSDATE()
+			, USE_FLAG = #{useFlag}
+		WHERE
+			ADMIN_ID = #{adminId}
+	</update>
+	
+	<update id="adminDelete" parameterType="AdminVO">
+		UPDATE
+			SPW_ADMIN
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			ADMIN_ID = #{adminId}
+	</update>
+	
+	<delete id="adminDeletePermanent" parameterType="AdminVO">
+		DELETE FROM SPW_ADMIN
+		WHERE
+			ADMIN_ID = #{adminId}
+	</delete>
+</mapper>

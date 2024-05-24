@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="surveyMapper">
+	
+	<!--설문조사 생성-->
+	<insert id="insertSurvey" parameterType="SurveyVO" useGeneratedKeys="true" keyProperty="surveyId" keyColumn="SURVEY_ID">
+		INSERT INTO SPW_SURVEY
+			(SURVEY_ID, SURVEY_TITLE, SURVEY_DESC, SURVEY_ORDER, START_DATE, END_DATE, REG_ID, REG_DATE, USE_FLAG, OPEN_FLAG, OPEN_RESULT_FLAG, LIMIT_RSPDENT_MAX, LIMIT_RSPDENT_DUP, SKIN_ID)
+		VALUES
+			(#{surveyId}, #{surveyTitle}, #{surveyDesc}, #{surveyOrder}, #{startDate}, #{endDate}, #{regId}, NOW(), 'Y', #{openFlag}, #{openResultFlag}, #{limitRspdentMax}, #{limitRspdentDup}, #{skinId})
+	</insert>
+	
+	<!--설문조사 수정-->
+	<update id="updateSurvey" parameterType="SurveyVO">
+	  UPDATE SPW_SURVEY
+		SET
+			SURVEY_ID = #{surveyId},
+			SURVEY_TITLE = #{surveyTitle},
+			SURVEY_DESC = #{surveyDesc},
+			SURVEY_ORDER = #{surveyOrder},
+			START_DATE = #{startDate},
+			END_DATE = #{endDate},
+			OPEN_FLAG = #{openFlag},
+			OPEN_RESULT_FLAG = #{openResultFlag},
+			LIMIT_RSPDENT_MAX = #{limitRspdentMax},
+			LIMIT_RSPDENT_DUP = #{limitRspdentDup},
+			SKIN_ID = #{skinId},
+			UPD_ID = #{updId},
+			UPD_DATE = NOW()
+		WHERE
+			SURVEY_ID = #{surveyId}
+	</update>
+	
+	<!--설문조사 정보를 불러온다.-->
+	<select id="selectSurveyView" parameterType="SurveyVO" resultType="SurveyVO">
+	    SELECT
+			SURVEY_ID, SURVEY_TITLE, SURVEY_DESC, SURVEY_ORDER, DATE_FORMAT(START_DATE, '%Y-%m-%d %H:%i') AS START_DATE, DATE_FORMAT(END_DATE, '%Y-%m-%d %H:%i') AS END_DATE, REG_ID, REG_DATE, USE_FLAG, OPEN_FLAG, OPEN_RESULT_FLAG, LIMIT_RSPDENT_MAX, LIMIT_RSPDENT_DUP, SKIN_ID,
+			<!--설문조사 기간 안인지 조사-->
+			DATEDIFF(NOW(), START_DATE) AS START_DATE_DIFF,
+			DATEDIFF(NOW(), END_DATE) AS END_DATE_DIFF,
+			(SELECT count(*) FROM SPW_SURVEYRSPDENT WHERE SURVEY_ID = #{surveyId}) AS NUM_RSPDENT
+		FROM
+			SPW_SURVEY
+		WHERE
+			SURVEY_ID = #{surveyId}
+	</select>
+	
+	<!--설문조사 목록을 불러온다.-->
+	<select id="selectSurveyList" parameterType="SurveyVO" resultType="SurveyVO">
+	  SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, B.*
+		FROM
+			(SELECT
+				SURVEY_ID, SURVEY_TITLE, SURVEY_DESC, SURVEY_ORDER, DATE_FORMAT(START_DATE, '%Y-%m-%d %H:%i') AS START_DATE, DATE_FORMAT(END_DATE, '%Y-%m-%d %H:%i') AS END_DATE, REG_ID, REG_DATE, USE_FLAG, OPEN_FLAG, OPEN_RESULT_FLAG, LIMIT_RSPDENT_MAX, LIMIT_RSPDENT_DUP, SKIN_ID,
+				<!--설문조사 기간 안인지 조사-->
+				DATEDIFF(NOW(), START_DATE) AS START_DATE_DIFF,
+				DATEDIFF(NOW(), END_DATE) AS END_DATE_DIFF
+			FROM
+				SPW_SURVEY AS A
+			<where>
+				AND A.USE_FLAG = 'Y'
+				<!-- 키워드 검색 -->
+		    	<if test="searchWrd != null and searchWrd != ''">
+					<choose>
+						<when test="searchCnd == 1">
+							AND (A.SURVEY_TITLE LIKE CONCAT ('%',#{searchWrd},'%') OR A.SURVEY_ID LIKE CONCAT ('%',#{searchWrd},'%'))
+						</when >
+						<when test="searchCnd == 2">
+							AND A.SURVEY_TITLE LIKE CONCAT ('%',#{searchWrd},'%')
+						</when >
+						<when test="searchCnd == 3">
+							AND A.SURVEY_ID LIKE CONCAT ('%',#{searchWrd},'%')
+						</when >
+						<when test="searchCnd == 4">
+							AND A.SURVEY_DESC LIKE CONCAT ('%',#{searchWrd},'%')
+						</when >
+					</choose>
+				</if>
+				<!-- 키워드 검색 -->
+			</where>
+			ORDER BY REG_DATE) B, ( SELECT @ROWNUM := 0) R
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<!-- 설문조사 리스트 갯수 -->
+	<select id="selectSurveyListCnt" parameterType="surveyVO" resultType="int">
+		SELECT COUNT(*) FROM SPW_SURVEY
+		<where>
+			AND USE_FLAG = 'Y'
+			<!-- 키워드 검색 -->
+	    	<if test="searchWrd != null and searchWrd != ''">
+				<choose>
+					<when test="searchCnd == 1">
+						AND (SURVEY_TITLE LIKE CONCAT ('%',#{searchWrd},'%') OR SURVEY_ID LIKE CONCAT ('%',#{searchWrd},'%'))
+					</when >
+					<when test="searchCnd == 2">
+						AND SURVEY_TITLE LIKE CONCAT ('%',#{searchWrd},'%')
+					</when >
+					<when test="searchCnd == 3">
+						AND SURVEY_ID LIKE CONCAT ('%',#{searchWrd},'%')
+					</when >
+					<when test="searchCnd == 4">
+						AND SURVEY_DESC LIKE CONCAT ('%',#{searchWrd},'%')
+					</when >
+				</choose>
+			</if>
+			<!-- 키워드 검색 -->
+		</where>
+	</select>
+	
+	<!-- 설문조사 질문 삭제 -->
+	<update id="deleteSurvey" parameterType="surveyVO">
+		UPDATE SPW_SURVEY
+		SET USE_FLAG = 'N'
+		WHERE SURVEY_ID = #{surveyId}
+	</update>
+	
+	<!-- 설문조사 질문 생성 -->
+	<insert id="insertSurveyQuestion" parameterType="surveyVO" useGeneratedKeys="true" keyProperty="questionId" keyColumn="question_id">
+		<selectKey resultType="surveyVO" keyProperty="questionId" order="BEFORE">
+			SELECT IFNULL(max(question_id), 0) + 1 AS question_id FROM SPW_SURVEYQUESTION
+		</selectKey>
+		INSERT INTO SPW_SURVEYQUESTION 
+			(QUESTION_ID, QUESTION_TITLE, QUESTION_CODE, QUESTION_TYPE, USE_OTHER_SELECT_FLAG, SURVEY_ID, USE_FLAG)
+		VALUES 
+			(#{questionId}, #{questionTitle}, #{questionCode}, #{questionType}, #{useOtherSelectFlag}, #{surveyId}, 'Y')
+	</insert>
+	
+	<!-- 설문조사 질문 조회-->
+	<select id="selectSurveyQuestionView" parameterType="surveyVO" resultType="surveyVO">
+		SELECT
+			QUESTION_ID, QUESTION_TITLE, QUESTION_CODE, QUESTION_TYPE, USE_OTHER_SELECT_FLAG, SURVEY_ID, USE_FLAG
+		FROM
+			SPW_SURVEYQUESTION
+		WHERE
+			QUESTION_ID = #{questionId}
+			AND USE_FLAG = 'Y'
+	</select>
+	
+	<!-- 설문조사의 모든 질문 조회-->
+	<select id="selectSurveyQuestionList" parameterType="surveyVO" resultType="surveyVO">
+		SELECT
+			QUESTION_ID, QUESTION_TITLE, QUESTION_DESC, QUESTION_CODE, QUESTION_TYPE, USE_OTHER_SELECT_FLAG, SURVEY_ID, USE_FLAG
+		FROM
+			SPW_SURVEYQUESTION
+		WHERE
+			SURVEY_ID = #{surveyId}
+			AND USE_FLAG = 'Y'
+	</select>
+	
+	<!-- 설문조사 질문 수정 -->
+	<update id="updateSurveyQuestion" parameterType="surveyVO">
+		UPDATE SPW_SURVEYQUESTION
+		SET QUESTION_ID = #{questionId},
+			QUESTION_TITLE = #{questionTitle},
+			QUESTION_CODE = #{questionCode},
+			QUESTION_TYPE = #{questionType},
+			USE_OTHER_SELECT_FLAG = #{useOtherSelectFlag},
+			SURVEY_ID = #{surveyId}
+		WHERE QUESTION_ID = #{questionId}
+	</update>
+	
+	<!-- 설문조사 질문 삭제 -->
+	<update id="deleteSurveyQuestion" parameterType="surveyVO">
+		UPDATE SPW_SURVEYQUESTION 
+		SET USE_FLAG = 'N'
+		WHERE QUESTION_ID = #{questionId}
+	</update>
+	
+	<!-- 설문조사 질문 선택지 생성 -->
+	<insert id="insertSurveyQuestionAnswer" parameterType="surveyVO">
+		<selectKey resultType="SurveyVO" keyProperty="answerId" order="BEFORE">
+			SELECT IFNULL(max(answer_id), 0) + 1 AS answerId FROM SPW_SURVEYQUESTIONANSWER
+		</selectKey>
+		INSERT INTO SPW_SURVEYQUESTIONANSWER 
+			(ANSWER_ID, ANSWER_TITLE, USE_FLAG, SURVEY_ID, QUESTION_ID)
+		VALUES 
+			(#{answerId}, #{answerTitle}, 'Y', #{surveyId}, #{questionId})
+	</insert>
+	
+	<!-- 설문조사 질문 선택지 수정 -->
+	<update id="updateSurveyQuestionAnswer" parameterType="surveyVO">
+		UPDATE SPW_SURVEYQUESTIONANSWER
+		SET ANSWER_ID = #{answerId},
+			ANSWER_TITLE = #{answerTitle},
+			SURVEY_ID = #{surveyId},
+			QUESTION_ID = #{questionId}
+		WHERE ANSWER_ID = #{answerId}
+	</update>
+	
+	<!-- 설문조사 질문 선택지 삭제 -->
+	<update id="deleteSurveyQuestionAnswer" parameterType="surveyVO">
+		UPDATE SPW_SURVEYQUESTIONANSWER 
+		SET USE_FLAG = 'N'
+		WHERE ANSWER_ID = #{answerId}
+	</update>
+	
+	<!-- 설문조사 질문의 모든 선택지 조회 -->
+	<select id="selectSurveyQuestionAnswerList" parameterType="surveyVO" resultType="surveyVO">
+		SELECT
+			ANSWER_ID, ANSWER_TITLE, USE_FLAG, SURVEY_ID, QUESTION_ID, USE_FLAG
+		FROM
+			SPW_SURVEYQUESTIONANSWER
+		WHERE
+			QUESTION_ID = #{questionId}
+			AND USE_FLAG = 'Y'
+	</select>
+	
+	<!-- 설문조사 질문의 모든 선택지 삭제 -->
+	<select id="deleteSurveyQuestionAnswerAll" parameterType="surveyVO" resultType="surveyVO">
+		DELETE FROM
+			SPW_SURVEYQUESTIONANSWER
+		WHERE
+			QUESTION_ID = #{questionId}
+	</select>
+	
+	<!-- 설문조사 응답자 생성 -->
+	<insert id="insertSurveyRespondent" parameterType="surveyVO">
+		<selectKey resultType="SurveyVO" keyProperty="rspdentId" order="BEFORE">
+			SELECT IFNULL(max(rspdent_id), 0) + 1 AS rspdentId FROM SPW_SURVEYRSPDENT
+		</selectKey>
+		INSERT INTO SPW_SURVEYRSPDENT (
+			RSPDENT_ID,
+			REG_DATE,
+			SURVEY_ID,
+			USE_FLAG
+			<if test="mberId != null and mberId!=''">
+				MBER_ID,
+			</if>
+		) VALUES (
+			#{rspdentId},
+			NOW(),
+			#{surveyId},
+			'Y'
+			<if test="mberId != null and mberId!=''">
+				#{mberId},
+			</if>
+		)
+	</insert>
+	
+	<!-- 설문조사 응답 생성 -->
+	<insert id="insertSurveyResult" parameterType="surveyVO">
+		<selectKey resultType="SurveyVO" keyProperty="resultId" order="BEFORE">
+			SELECT IFNULL(max(result_id), 0) + 1 AS resultId FROM SPW_SURVEYRESULT
+		</selectKey>
+		INSERT INTO SPW_SURVEYRESULT (
+			RESULT_ID,
+			REG_DATE,
+			<if test="subjectiveCn != null and subjectiveCn!=''">
+				SUBJECTIVE_CN,
+			</if>
+				RSPDENT_ID,
+			<if test="answerId != null and answerId!=''">
+				ANSWER_ID,
+			</if>
+			QUESTION_ID,
+			SURVEY_ID,
+			USE_FLAG
+		)VALUES (
+			#{resultId},
+			NOW(),
+			<if test="subjectiveCn != null and subjectiveCn !=''">
+				#{subjectiveCn},
+			</if>
+				#{rspdentId},
+			<if test="answerId != null and answerId!=''">
+				#{answerId},
+			</if>
+			#{questionId},
+			#{surveyId},
+			'Y')
+	</insert>
+	
+	<!-- 결과 조회 -->
+	<select id="selectSurveyResultList" parameterType="surveyVO" resultType="surveyVO">
+		SELECT
+			*
+		FROM
+			SPW_SURVEYRESULT
+		WHERE
+			QUESTION_ID = #{questionId}
+			<if test="answerId != null and answerId !=''">
+				AND ANSWER_ID = #{answerId}
+			</if>
+			<if test="answerId == null or answerId ==''">
+				AND SUBJECTIVE_CN IS NOT NULL
+			</if>
+			<if test="rspdentId != null and rspdentId!=''">
+				AND RSPDENT_ID = #{rspdentId}
+			</if>
+			AND USE_FLAG = 'Y'
+	</select>
+	
+	<!-- 응답자 목록 조회 -->
+	<select id="selectRspdentList" parameterType="surveyVO" resultType="surveyVO">
+		SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, B.*
+		FROM
+			(SELECT
+				*
+			FROM
+				SPW_SURVEYRSPDENT
+			WHERE
+				SURVEY_ID = #{surveyId}
+				AND USE_FLAG = 'Y'
+			ORDER BY REG_DATE) B, ( SELECT @ROWNUM := 0) R
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectRspdentListCnt" parameterType="surveyVO" resultType="int">
+		SELECT COUNT(*)
+		FROM
+			SPW_SURVEYRSPDENT
+		WHERE
+			SURVEY_ID = #{surveyId}
+			AND USE_FLAG = 'Y'
+		
+	</select>
+	
+</mapper>

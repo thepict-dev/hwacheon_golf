@@ -1,0 +1,1114 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- 
+	수정일                 수정자                          수정내용
+  =========     =======    =================================================
+  2011.09.21    서준식              NTT_ID를 IDGENT서비스를 사용해서 생성하므로 selectMaxNttId문은 실제 사용하지 않음
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BBSArticle">
+
+	<resultMap id="boardList" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="inqireCo" column="RDCNT"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="replyAt" column="ANSWER_AT"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+		<result property="sjBoldAt" column="SJ_BOLD_AT"/>
+		<result property="noticeAt" column="NOTICE_AT"/>
+		<result property="secretAt" column="SECRET_AT"/>
+		<result property="commentCo" column="COMMENT_CO"/>
+		<result property="category" column="CATEGORY"/>
+		<result property="userTel" column="USER_TEL"/>
+		<result property="userCel" column="USER_CEL"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="detailAddr" column="DETAIL_ADDR"/>
+		<result property="zipCode" column="ZIP_CODE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="tmpField1" column="TMP_FIELD1"/>
+		<result property="tmpField2" column="TMP_FIELD2"/>
+		<result property="tmpField3" column="TMP_FIELD3"/>
+		<result property="tmpField4" column="TMP_FIELD4"/>
+		<result property="tmpField5" column="TMP_FIELD5"/>
+		<result property="tmpField6" column="TMP_FIELD6"/>
+		<result property="tmpField7" column="TMP_FIELD7"/>
+		<result property="tmpField8" column="TMP_FIELD8"/>
+		<result property="tmpField9" column="TMP_FIELD9"/>
+		<result property="tmpField10" column="TMP_FIELD10"/>
+		<result property="cateType01" column="CATE_TYPE01"/>
+		<result property="cateType02" column="CATE_TYPE02"/>
+		<result property="cateType03" column="CATE_TYPE03"/>
+	</resultMap>
+
+	<resultMap id="boardDetail" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>	
+		<result property="ntcrId" column="NTCR_ID"/>
+		<result property="ntcrNm" column="NTCR_NM"/>
+		<result property="nttNo" column="NTT_NO"/>
+		<result property="nttCn" column="NTT_CN"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+		<result property="inqireCo" column="RDCNT"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="replyAt" column="ANSWER_AT"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+		<result property="sortOrdr" column="SORT_ORDR"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="replyPosblAt" column="REPLY_POSBL_AT"/>
+		<result property="fileAtchPosblAt" column="FILE_ATCH_POSBL_AT"/>
+		<result property="posblAtchFileNumber" column="ATCH_POSBL_FILE_NUMBER"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="sjBoldAt" column="SJ_BOLD_AT"/>
+		<result property="noticeAt" column="NOTICE_AT"/>
+		<result property="secretAt" column="SECRET_AT"/>
+		<result property="category" column="CATEGORY"/>
+		<result property="fileCnt" column="FILE_CNT"/>
+		<result property="prevNttId" column="PREV_NTT_ID"/>
+		<result property="prevNttSj" column="PREV_NTT_SJ"/>
+		<result property="nextNttId" column="NEXT_NTT_ID"/>
+		<result property="nextNttSj" column="NEXT_NTT_SJ"/>
+		<result property="userTel" column="USER_TEL"/>
+		<result property="userCel" column="USER_CEL"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="detailAddr" column="DETAIL_ADDR"/>
+		<result property="zipCode" column="ZIP_CODE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="tmpField1" column="TMP_FIELD1"/>
+		<result property="tmpField2" column="TMP_FIELD2"/>
+		<result property="tmpField3" column="TMP_FIELD3"/>
+		<result property="tmpField4" column="TMP_FIELD4"/>
+		<result property="tmpField5" column="TMP_FIELD5"/>
+		<result property="tmpField6" column="TMP_FIELD6"/>
+		<result property="tmpField7" column="TMP_FIELD7"/>
+		<result property="tmpField8" column="TMP_FIELD8"/>
+		<result property="tmpField9" column="TMP_FIELD9"/>
+		<result property="tmpField10" column="TMP_FIELD10"/>
+		<result property="cateType01" column="CATE_TYPE01"/>
+		<result property="cateType02" column="CATE_TYPE02"/>
+		<result property="cateType03" column="CATE_TYPE03"/>
+		<result property="cateName01" column="CATE_NAME01"/>
+		<result property="cateName02" column="CATE_NAME02"/>
+		<result property="cateName03" column="CATE_NAME03"/>
+	</resultMap>
+	
+	<resultMap id="sortList" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="sortOrdr" column="SORT_ORDR"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="nttNo" column="NTT_NO"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+	</resultMap>
+
+	<resultMap id="guestList" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="nttCn" column="NTT_CN"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+	</resultMap>
+	
+	<resultMap id="detailCn" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>	
+		<result property="ntcrId" column="NTCR_ID"/>
+		<result property="ntcrNm" column="NTCR_NM"/>
+		<result property="nttNo" column="NTT_NO"/>
+		<result property="nttCn" column="NTT_CN"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+		<result property="inqireCo" column="RDCNT"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="replyAt" column="ANSWER_AT"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+		<result property="sortOrdr" column="SORT_ORDR"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="replyPosblAt" column="REPLY_POSBL_AT"/>
+		<result property="fileAtchPosblAt" column="FILE_ATCH_POSBL_AT"/>
+		<result property="posblAtchFileNumber" column="ATCH_POSBL_FILE_NUMBER"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="sjBoldAt" column="SJ_BOLD_AT"/>
+		<result property="noticeAt" column="NOTICE_AT"/>
+		<result property="secretAt" column="SECRET_AT"/>
+		<result property="commentCo" column="COMMENT_CO"/>
+	</resultMap>
+	
+	<resultMap id="boardCnOne" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="nttCn" column="NTT_CN"/>
+	</resultMap>
+	
+	<resultMap id="boardMasterList" type="egovframework.com.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsNm" column="BBS_NM"/>
+	</resultMap>
+	
+	<resultMap id="boardBlogManager" type="egovframework.com.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>
+	
+	<resultMap id="boardSubJectList" type="egovframework.com.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="inqireCo" column="RDCNT"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="replyAt" column="ANSWER_AT"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+		<result property="sjBoldAt" column="SJ_BOLD_AT"/>
+		<result property="noticeAt" column="NOTICE_AT"/>
+		<result property="secretAt" column="SECRET_AT"/>
+		<result property="commentCo" column="COMMENT_CO"/>
+		<result property="replyPosblAt" column="REPLY_POSBL_AT"/>
+		<result property="blogId" column="BLOG_ID"/>
+	</resultMap>
+
+ 	<select id="selectMaxNttId" resultType="java.lang.Long">
+			SELECT IFNULL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM COMTNBBS
+ 	</select>
+ 	
+	<insert id="insertArticle" parameterType="egovframework.com.cop.bbs.service.BoardVO">
+		<selectKey keyProperty="nttNo" resultType="java.lang.Long" order="BEFORE">
+			SELECT IFNULL(MAX(SORT_ORDR),0)+1 AS NTT_NO  FROM COMTNBBS
+			WHERE BBS_ID = #{bbsId}
+		</selectKey>
+		
+			INSERT INTO COMTNBBS
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR, 
+			 NTCR_ID, NTCR_NM, PASSWORD, RDCNT, 
+			 NTCE_BGNDE, NTCE_ENDDE, ANSWER_AT,  			   
+			 PARNTSCTT_NO, NTT_NO, ANSWER_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, USE_AT,
+			 SJ_BOLD_AT, NOTICE_AT, SECRET_AT, BLOG_ID, CATEGORY,
+			 USER_TEL, USER_CEL, ADDRESS, DETAIL_ADDR, ZIP_CODE, EMAIL,
+			 START_DATE, END_DATE, TMP_FIELD1, TMP_FIELD2, TMP_FIELD3,
+			 TMP_FIELD4, TMP_FIELD5, TMP_FIELD6, TMP_FIELD7, TMP_FIELD8,
+			 TMP_FIELD9, TMP_FIELD10, CATE_TYPE01, CATE_TYPE02, CATE_TYPE03
+			 )
+			VALUES
+			( #{nttId}, #{bbsId}, #{nttSj}, #{nttCn}, #{nttId}, 
+			  #{ntcrId}, #{ntcrNm}, #{password}, #{inqireCo}, 
+			  #{ntceBgnde}, #{ntceEndde}, #{replyAt}, 
+			  #{parnts}, 1, #{replyLc}, #{atchFileId},
+			  #{frstRegisterId}, SYSDATE(), 'Y',
+			  #{sjBoldAt}, #{noticeAt}, #{secretAt}, #{blogId}, #{category},
+			  #{userTel}, #{userCel}, #{address}, #{detailAddr},
+			  #{zipCode}, #{email}, #{startDate}, #{endDate},
+			  #{tmpField1}, #{tmpField2}, #{tmpField3}, #{tmpField4}, #{tmpField5},
+			  #{tmpField6}, #{tmpField7}, #{tmpField8}, #{tmpField9}, #{tmpField10},
+			  #{cateType01}, #{cateType02}, #{cateType03}
+			 )			
+		
+	</insert>
+	
+	<insert id="replyArticle" parameterType="egovframework.com.cop.bbs.service.BoardVO">
+		<selectKey keyProperty="nttNo" resultType="java.lang.Long" order="BEFORE">
+			SELECT IFNULL(MAX(NTT_NO),0)+1 AS NTT_NO  FROM COMTNBBS
+			WHERE BBS_ID = #{bbsId} AND SORT_ORDR = #{sortOrdr}
+		</selectKey>			
+		
+			INSERT INTO COMTNBBS
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR, 
+			 NTCR_ID, NTCR_NM, PASSWORD, RDCNT, 
+			 NTCE_BGNDE, NTCE_ENDDE, ANSWER_AT,  			   
+			 PARNTSCTT_NO, NTT_NO, ANSWER_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, USE_AT,
+			 SJ_BOLD_AT, NOTICE_AT, SECRET_AT
+			 )
+			VALUES
+			( #{nttId}, #{bbsId}, #{nttSj}, #{nttCn}, #{sortOrdr}, 
+			  #{ntcrId}, #{ntcrNm}, #{password}, #{inqireCo}, 
+			  #{ntceBgnde}, #{ntceEndde}, #{replyAt}, 
+			  #{parnts}, #{nttNo}, #{replyLc}, #{atchFileId},
+			  #{frstRegisterId}, SYSDATE(), 'Y',
+			  #{sjBoldAt}, #{noticeAt}, #{secretAt}
+			 )			
+		
+	</insert>	
+	
+	<select id="selectArticleList" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardList">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.RDCNT, a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.USE_AT, a.ATCH_FILE_ID,
+				a.BBS_ID, a.NTCE_BGNDE, a.NTCE_ENDDE, a.CATEGORY,
+				a.USER_TEL, a.USER_CEL, a.ADDRESS, a.DETAIL_ADDR, a.ZIP_CODE, a.EMAIL, a.START_DATE,
+				a.END_DATE, a.TMP_FIELD1, a.TMP_FIELD2, a.TMP_FIELD3, a.TMP_FIELD4, a.TMP_FIELD5, a.TMP_FIELD6, a.TMP_FIELD7,
+				a.TMP_FIELD8, a.TMP_FIELD9, a.TMP_FIELD10, a.CATE_TYPE01, a.CATE_TYPE02, a.CATE_TYPE03,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE01) AS CATE_NAME01,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE02) AS CATE_NAME02,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE03) AS CATE_NAME03,
+				a.NOTICE_AT, a.SECRET_AT
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND
+				a.USE_AT = 'Y'
+			AND
+				a.ANSWER_AT = 'N' AND a.ANSWER_LC = 0
+
+			<if test='searchCnd == "ALL"'>
+				AND	(a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') OR a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test='searchCnd == "ADDRESS"'>
+				AND	a.ADDRESS LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "EMAIL"'>
+				AND	a.EMAIL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTCR_NM"'>
+				AND	a.NTCR_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_SJ"'>
+				AND	a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD1"'>
+				AND	a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD2"'>
+				AND	a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD3"'>
+				AND	a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD4"'>
+				AND	a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD5"'>
+				AND	a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD6"'>
+				AND	a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD7"'>
+				AND	a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD8"'>
+				AND	a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD9"'>
+				AND	a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD10"'>
+				AND	a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_CEL"'>
+				AND	a.USER_CEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_TEL"'>
+				AND	a.USER_TEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_CN"'>
+				AND	a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchNotice == "Y"'>
+				AND	a.NOTICE_AT = 'Y' 		
+			</if>
+			<if test='searchCate != null and searchCate != ""'>
+				AND a.CATEGORY = #{searchCate}
+			</if>
+			<if test='searchCate1 != null and searchCate1 != ""'>
+				AND a.CATE_TYPE01 = #{searchCate1}
+			</if>
+			<if test='searchCate2 != null and searchCate2 != ""'>
+				AND a.CATE_TYPE02 = #{searchCate2}
+			</if>
+			<if test='searchCate3 != null and searchCate3 != ""'>
+				AND a.CATE_TYPE03 = #{searchCate3}
+			</if>
+			ORDER BY a.FRST_REGIST_PNTTM ASC, a.SORT_ORDR DESC, NTT_NO ASC
+		)t, ( SELECT @RNUM := 0 ) R
+		<if test='bbsId == "BBSMSTR_000000000031" or bbsId == "BBSMSTR_000000000032"'>
+			ORDER BY t.TMP_FIELD1*1 ASC
+		</if>
+		<if test='bbsId != "BBSMSTR_000000000031" and bbsId != "BBSMSTR_000000000032"'>
+			ORDER BY ROWNUM DESC
+		</if>
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+						
+	</select>	
+	
+	<select id="selectArticleListCnt" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+		
+			SELECT
+				COUNT(a.NTT_ID)
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND
+				a.USE_AT = 'Y'
+			AND
+				a.ANSWER_AT = 'N' AND a.ANSWER_LC = 0
+
+			<if test='searchCnd == "ALL"'>
+				AND	(a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') OR a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test='searchCnd == "ADDRESS"'>
+				AND	a.ADDRESS LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "EMAIL"'>
+				AND	a.EMAIL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTCR_NM"'>
+				AND	a.NTCR_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_SJ"'>
+				AND	a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD1"'>
+				AND	a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD2"'>
+				AND	a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD3"'>
+				AND	a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD4"'>
+				AND	a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD5"'>
+				AND	a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD6"'>
+				AND	a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD7"'>
+				AND	a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD8"'>
+				AND	a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD9"'>
+				AND	a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD10"'>
+				AND	a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_CEL"'>
+				AND	a.USER_CEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_TEL"'>
+				AND	a.USER_TEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_CN"'>
+				AND	a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchNotice == "Y"'>
+				AND	a.NOTICE_AT = 'Y' 		
+			</if>
+			<if test='searchCate != null and searchCate != ""'>
+				AND a.CATEGORY = #{searchCate}
+			</if>
+			<if test='searchCate1 != null and searchCate1 != ""'>
+				AND a.CATE_TYPE01 = #{searchCate1}
+			</if>
+			<if test='searchCate2 != null and searchCate2 != ""'>
+				AND a.CATE_TYPE02 = #{searchCate2}
+			</if>
+			<if test='searchCate3 != null and searchCate3 != ""'>
+				AND a.CATE_TYPE03 = #{searchCate3}
+			</if>
+	</select>	
+ 
+	<select id="selectArticleDetail" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardDetail">
+		
+			SELECT
+				a.NTT_SJ, a.NTCR_ID, a.NTCR_NM, a.NTT_NO, a.NTT_CN,
+				a.PASSWORD, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.NTCE_BGNDE, a.NTCE_ENDDE, a.RDCNT, a.CATEGORY,
+				a.USE_AT, a.ATCH_FILE_ID, a.BBS_ID, a.NTT_ID,
+				a.SJ_BOLD_AT, a.NOTICE_AT, a.SECRET_AT,
+				a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.SORT_ORDR,
+				a.USER_TEL, a.USER_CEL, a.ADDRESS, a.DETAIL_ADDR, a.ZIP_CODE, a.EMAIL, a.START_DATE,
+				a.END_DATE, a.TMP_FIELD1, a.TMP_FIELD2, a.TMP_FIELD3, a.TMP_FIELD4, a.TMP_FIELD5,
+				a.TMP_FIELD6, a.TMP_FIELD7, a.TMP_FIELD8, a.TMP_FIELD9, a.TMP_FIELD10,
+				c.BBS_TY_CODE, c.REPLY_POSBL_AT, 
+				c.FILE_ATCH_POSBL_AT, c.ATCH_POSBL_FILE_NUMBER, c.BBS_NM,
+                (SELECT COUNT(*) FROM COMTNFILEDETAIL cf WHERE a.ATCH_FILE_ID = cf.ATCH_FILE_ID AND cf.IMG_FLAG != 'thumbnail') as FILE_CNT,
+				IFNULL((SELECT NTT_ID FROM COMTNBBS WHERE NTT_ID &lt; #{nttId} AND BBS_ID = #{bbsId} AND USE_AT = 'Y' ORDER BY NTT_ID DESC LIMIT 1),0) AS PREV_NTT_ID,
+				(SELECT NTT_SJ FROM COMTNBBS WHERE NTT_ID &lt; #{nttId} AND BBS_ID = #{bbsId} AND USE_AT = 'Y' ORDER BY NTT_ID DESC LIMIT 1) AS PREV_NTT_SJ,
+				IFNULL((SELECT NTT_ID FROM COMTNBBS WHERE NTT_ID &gt; #{nttId} AND BBS_ID = #{bbsId} AND USE_AT = 'Y' ORDER BY NTT_ID ASC LIMIT 1),0) AS NEXT_NTT_ID,
+				(SELECT NTT_SJ FROM COMTNBBS WHERE NTT_ID &gt; #{nttId} AND BBS_ID = #{bbsId} AND USE_AT = 'Y' ORDER BY NTT_ID ASC LIMIT 1) AS NEXT_NTT_SJ,
+				a.CATE_TYPE01, a.CATE_TYPE02, a.CATE_TYPE03, (SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE01) AS CATE_NAME01,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE02) AS CATE_NAME02,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE03) AS CATE_NAME03
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			LEFT OUTER JOIN 
+				COMTNBBSMASTER c
+			ON a.BBS_ID = c.BBS_ID			
+			WHERE
+				a.NTT_ID = #{nttId}
+			<if test="bbsId != null and !bbsId.equals('')">
+			AND 
+				a.BBS_ID = #{bbsId}
+			</if>					
+			AND 
+				a.USE_AT = 'Y'
+						
+	</select>
+	
+	<select id="selectArticleDetailCn" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="detailCn">
+		
+			SELECT
+				a.NTT_SJ, a.NTCR_ID, a.NTCR_NM, a.NTT_NO, a.NTT_CN,
+				a.PASSWORD, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.NTCE_BGNDE, a.NTCE_ENDDE, a.RDCNT, 
+				a.USE_AT, a.ATCH_FILE_ID, a.BBS_ID, a.NTT_ID,
+				a.SJ_BOLD_AT, a.NOTICE_AT, a.SECRET_AT,
+				a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.SORT_ORDR,
+				c.BBS_TY_CODE, c.REPLY_POSBL_AT, 
+				c.FILE_ATCH_POSBL_AT, c.ATCH_POSBL_FILE_NUMBER, c.BBS_NM
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			LEFT OUTER JOIN 
+				COMTNBBSMASTER c
+			ON a.BBS_ID = c.BBS_ID			
+			WHERE
+				a.BBS_ID = #{bbsId}	
+			AND
+				a.NTT_ID = #{nttId}	
+			AND 
+				a.USE_AT = 'Y'
+						
+	</select>
+	
+ 	<update id="updateArticle" parameterType="egovframework.com.cop.bbs.service.BoardVO">
+ 		
+			UPDATE COMTNBBS SET 
+				NTT_SJ = #{nttSj},
+				NTT_CN = #{nttCn}, 
+				NTCR_NM = #{ntcrNm},
+				NTCE_BGNDE = #{ntceBgnde},		
+				NTCE_ENDDE = #{ntceEndde},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE(),
+				NOTICE_AT = #{noticeAt},
+				CATEGORY = #{category},
+				ATCH_FILE_ID = #{atchFileId},
+				USER_TEL = #{userTel},
+				USER_CEL = #{userCel},
+				ADDRESS = #{address},
+				DETAIL_ADDR = #{detailAddr},
+				ZIP_CODE = #{zipCode},
+				EMAIL = #{email},
+				START_DATE = #{startDate},
+				END_DATE = #{endDate},
+				TMP_FIELD1 = #{tmpField1},
+				TMP_FIELD2 = #{tmpField2},
+				TMP_FIELD3 = #{tmpField3},
+				TMP_FIELD4 = #{tmpField4},
+				TMP_FIELD5 = #{tmpField5},
+				TMP_FIELD6 = #{tmpField6},
+				TMP_FIELD7 = #{tmpField7},
+				TMP_FIELD8 = #{tmpField8},
+				TMP_FIELD9 = #{tmpField9},
+				TMP_FIELD10 = #{tmpField10},
+				CATE_TYPE01 = #{cateType01},
+				CATE_TYPE02 = #{cateType02},
+				CATE_TYPE03 = #{cateType03}
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+
+ 	<update id="deleteArticle" parameterType="egovframework.com.cop.bbs.service.BoardVO">
+ 		
+			UPDATE COMTNBBS SET
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE()
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+
+ 	<select id="selectMaxInqireCo" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+ 		
+			SELECT IFNULL(MAX(RDCNT),0)+1 AS RDCNT FROM COMTNBBS
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</select>
+ 	
+
+ 	<update id="updateInqireCo" parameterType="egovframework.com.cop.bbs.service.BoardVO">
+ 		
+			UPDATE COMTNBBS SET 
+				RDCNT = #{inqireCo}
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+
+ 	
+ 	<select id="selectNoticeArticleList" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardList">
+		
+			SELECT
+				a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.RDCNT, a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.USE_AT, a.ATCH_FILE_ID,
+				a.BBS_ID, a.NTCE_BGNDE, a.NTCE_ENDDE, a.SJ_BOLD_AT, a.NOTICE_AT, a.SECRET_AT, c.COMMENT_CO
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			LEFT OUTER JOIN
+				(SELECT NTT_ID, BBS_ID, COUNT(1) AS COMMENT_CO 
+				   FROM COMTNCOMMENT 
+				 WHERE USE_AT = 'Y' 
+				 GROUP BY NTT_ID, BBS_ID) c
+			ON a.NTT_ID = c.NTT_ID
+			AND a.BBS_ID = c.BBS_ID
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND a.NOTICE_AT = 'Y'
+			AND a.USE_AT = 'Y'
+					
+			ORDER BY a.SORT_ORDR DESC, NTT_NO ASC
+			LIMIT 5 
+						
+	</select>	
+	
+	<select id="selectGuestArticleList" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="guestList">
+		
+			SELECT
+				a.NTT_ID, a.NTT_SJ,  
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d %H:%i:%S')	as FRST_REGIST_PNTTM,
+				a.NTT_CN, a.USE_AT, a.BBS_ID, b.USER_NM as FRST_REGISTER_NM, a.FRST_REGISTER_ID
+			FROM
+				COMTNBBS a, COMVNUSERMASTER b
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND 
+				a.FRST_REGISTER_ID = b.ESNTL_ID
+			AND
+				a.USE_AT = 'Y'
+			ORDER BY a.SORT_ORDR DESC, a.NTT_NO ASC
+			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+						
+	</select>	
+	
+	<select id="selectGuestArticleListCnt" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+		
+			SELECT
+				COUNT(NTT_ID)
+			FROM
+				COMTNBBS 
+			WHERE
+				BBS_ID = #{bbsId}	
+			AND
+				USE_AT = 'Y'
+					
+	</select>
+	
+	<select id="selectLoginUser" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+		
+			SELECT
+				COUNT(FRST_REGISTER_ID)
+			FROM
+				COMTNBLOG 
+			WHERE
+				FRST_REGISTER_ID = #{frstRegisterId}
+			AND
+				BLOG_ID = #{blogId}	
+					
+	</select>
+	
+	<select id="selectBlogListManager" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardBlogManager">
+		
+			SELECT 
+				A.BBS_ID, A.BLOG_ID, A.BBS_NM, C.USER_NM AS FRST_REGISTER_NM,
+				DATE_FORMAT(A.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				A.USE_AT 
+			FROM
+	 			COMTNBBSMASTER A
+			LEFT OUTER JOIN    
+				COMTNBLOG B
+			ON A.BLOG_ID = B.BLOG_ID
+			LEFT OUTER JOIN
+			  (SELECT ESNTL_ID, USER_ID, USER_NM FROM COMVNUSERMASTER) C
+			ON A.FRST_REGISTER_ID = C.ESNTL_ID
+			WHERE A.BLOG_ID = #{blogId}
+			<if test="searchCnd == 0">AND
+					A.BBS_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 1">AND
+					A.BBS_INTRCN LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if> 
+	 		ORDER BY A.FRST_REGIST_PNTTM DESC
+						
+	</select>
+	
+	<select id="selectBlogListManagerCnt" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(1) 
+			FROM
+	 			COMTNBBSMASTER A, COMTNBLOG B
+	 		WHERE A.BLOG_ID = B.BLOG_ID
+	 		AND B.BLOG_ID = #{blogId}
+	 		<if test="searchCnd == 0">AND
+					A.BBS_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 1">AND
+					A.BBS_INTRCN LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+	 		ORDER BY A.FRST_REGIST_PNTTM DESC
+						
+	</select>
+	
+	<select id="selectArticleCnOne" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardCnOne">
+		
+			SELECT
+				a.NTT_CN
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			LEFT OUTER JOIN 
+				COMTNBBSMASTER c
+			ON a.BBS_ID = c.BBS_ID			
+			WHERE
+				a.BBS_ID = #{bbsId}	
+			AND 
+				a.USE_AT = 'Y'
+			ORDER BY a.SORT_ORDR DESC
+			LIMIT 1
+						
+	</select>
+	
+	<select id="selectBlogNmList" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardMasterList">
+		
+			SELECT 
+				A.BBS_ID, A.BLOG_ID, A.BBS_NM 
+			FROM
+	 			COMTNBBSMASTER A, COMTNBLOG B
+	 		WHERE A.BLOG_ID = B.BLOG_ID
+	 		AND B.BLOG_ID = #{blogId}
+	 		ORDER BY A.FRST_REGIST_PNTTM DESC
+	 		LIMIT 7 OFFSET 0
+						
+	</select>
+	
+	<select id="selectArticleDetailDefault" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardSubJectList">
+	
+			SELECT
+					a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+					DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+					a.RDCNT, a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.USE_AT, a.ATCH_FILE_ID,
+					a.BBS_ID, a.NTCE_BGNDE, a.NTCE_ENDDE, a.SJ_BOLD_AT, a.NOTICE_AT, a.SECRET_AT, c.COMMENT_CO,
+					a.NTCR_ID, d.BLOG_ID, d.REPLY_POSBL_AT
+				FROM
+					COMTNBBS a
+				LEFT OUTER JOIN 
+					COMVNUSERMASTER b
+				ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+				LEFT OUTER JOIN
+					(SELECT NTT_ID, BBS_ID, COUNT(1) AS COMMENT_CO 
+					   FROM COMTNCOMMENT 
+					 WHERE USE_AT = 'Y' 
+					 GROUP BY NTT_ID, BBS_ID) c
+				ON a.NTT_ID = c.NTT_ID
+				LEFT OUTER JOIN
+					COMTNBBSMASTER d
+				ON a.BBS_ID = d.BBS_ID
+				WHERE
+					a.BBS_ID = #{bbsId}
+				AND a.USE_AT = 'Y'
+				ORDER BY a.SORT_ORDR DESC, NTT_NO ASC
+				<if test="searchCnd == 5">
+					LIMIT 5 		
+				</if>
+				<if test="searchCnd == 10">
+					LIMIT 10 		
+				</if>
+				<if test="searchCnd == 15">
+					LIMIT 15 		
+				</if>
+				<if test="searchCnd == 20">
+					LIMIT 20 		
+				</if>
+				<if test="searchCnd == 30">
+					LIMIT 30 		
+				</if>
+						
+	</select>
+	
+	<select id="selectArticleDetailDefaultCnt" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+	
+			SELECT
+					COUNT(*)
+				FROM
+					COMTNBBS a
+				LEFT OUTER JOIN 
+					COMVNUSERMASTER b
+				ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+				LEFT OUTER JOIN
+					(SELECT NTT_ID, BBS_ID, COUNT(1) AS COMMENT_CO 
+					   FROM COMTNCOMMENT 
+					 WHERE USE_AT = 'Y' 
+					 GROUP BY NTT_ID, BBS_ID) c
+				ON a.NTT_ID = c.NTT_ID
+				LEFT OUTER JOIN
+					COMTNBBSMASTER d
+				ON a.BBS_ID = d.BBS_ID
+				WHERE
+					a.BBS_ID = #{bbsId}
+				AND a.USE_AT = 'Y'
+				ORDER BY a.SORT_ORDR DESC, NTT_NO ASC
+						
+	</select>
+	
+	<update id="deleteAtchFileId" parameterType="java.lang.String">
+			UPDATE COMTNBBS SET
+				ATCH_FILE_ID = ''
+			WHERE ATCH_FILE_ID = #{atchFileId}
+ 	</update>
+	
+	<select id="selectPrevBoardList" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardDetail">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.RDCNT, a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.USE_AT, a.ATCH_FILE_ID,
+				a.BBS_ID, a.NTCE_BGNDE, a.NTCE_ENDDE, a.CATEGORY,
+				a.USER_TEL, a.USER_CEL, a.ADDRESS, a.DETAIL_ADDR, a.ZIP_CODE, a.EMAIL, a.START_DATE,
+				a.END_DATE, a.TMP_FIELD1, a.TMP_FIELD2, a.TMP_FIELD3, a.TMP_FIELD4, a.TMP_FIELD5,
+				a.TMP_FIELD6, a.TMP_FIELD7, a.TMP_FIELD8, a.TMP_FIELD9, a.TMP_FIELD10, a.CATE_TYPE01,
+				a.CATE_TYPE02, a.CATE_TYPE03, (SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE01) AS CATE_NAME01,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE02) AS CATE_NAME02,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE03) AS CATE_NAME03
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND
+				a.USE_AT = 'Y'
+			AND
+				a.NTT_ID &gt; #{nttId}
+
+			<if test='searchCnd == "ALL"'>
+				AND	(a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') OR a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test='searchCnd == "ADDRESS"'>
+				AND	a.ADDRESS LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "EMAIL"'>
+				AND	a.EMAIL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTCR_NM"'>
+				AND	a.NTCR_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_SJ"'>
+				AND	a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD1"'>
+				AND	a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD2"'>
+				AND	a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD3"'>
+				AND	a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD4"'>
+				AND	a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD5"'>
+				AND	a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD6"'>
+				AND	a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD7"'>
+				AND	a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD8"'>
+				AND	a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD9"'>
+				AND	a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD10"'>
+				AND	a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_CEL"'>
+				AND	a.USER_CEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_TEL"'>
+				AND	a.USER_TEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_CN"'>
+				AND	a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchNotice == "Y"'>
+				AND	a.NOTICE_AT = 'Y' 		
+			</if>
+			<if test='searchCate != null and searchCate != ""'>
+				AND a.CATEGORY = #{searchCate}
+			</if>
+			<if test='searchCate1 != null and searchCate1 != ""'>
+				AND a.CATE_TYPE01 = #{searchCate1}
+			</if>
+			<if test='searchCate2 != null and searchCate2 != ""'>
+				AND a.CATE_TYPE02 = #{searchCate2}
+			</if>
+			<if test='searchCate3 != null and searchCate3 != ""'>
+				AND a.CATE_TYPE03 = #{searchCate3}
+			</if>
+					
+			ORDER BY a.FRST_REGIST_PNTTM ASC, a.SORT_ORDR DESC, NTT_NO ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM ASC limit 1
+	</select>
+	
+	<select id="selectNextBoardList" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardDetail">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				a.NTT_ID, a.NTT_SJ, a.NTT_CN, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.RDCNT, a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.USE_AT, a.ATCH_FILE_ID,
+				a.BBS_ID, a.NTCE_BGNDE, a.NTCE_ENDDE, a.CATEGORY,
+				a.USER_TEL, a.USER_CEL, a.ADDRESS, a.DETAIL_ADDR, a.ZIP_CODE, a.EMAIL, a.START_DATE,
+				a.END_DATE, a.TMP_FIELD1, a.TMP_FIELD2, a.TMP_FIELD3, a.TMP_FIELD4, a.TMP_FIELD5, 
+				a.TMP_FIELD6, a.TMP_FIELD7, a.TMP_FIELD8, a.TMP_FIELD9, a.TMP_FIELD10, a.CATE_TYPE01,
+				a.CATE_TYPE02, a.CATE_TYPE03, (SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE01) AS CATE_NAME01,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE02) AS CATE_NAME02,
+				(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE03) AS CATE_NAME03
+			FROM
+				COMTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND
+				a.USE_AT = 'Y'
+			AND
+				a.NTT_ID &lt; #{nttId}
+
+			<if test='searchCnd == "ALL"'>
+				AND	(a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') OR a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%')
+				OR a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') OR a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test='searchCnd == "ADDRESS"'>
+				AND	a.ADDRESS LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "EMAIL"'>
+				AND	a.EMAIL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTCR_NM"'>
+				AND	a.NTCR_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_SJ"'>
+				AND	a.NTT_SJ LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD1"'>
+				AND	a.TMP_FIELD1 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD2"'>
+				AND	a.TMP_FIELD2 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD3"'>
+				AND	a.TMP_FIELD3 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD4"'>
+				AND	a.TMP_FIELD4 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD5"'>
+				AND	a.TMP_FIELD5 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD6"'>
+				AND	a.TMP_FIELD6 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD7"'>
+				AND	a.TMP_FIELD7 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD8"'>
+				AND	a.TMP_FIELD8 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD9"'>
+				AND	a.TMP_FIELD9 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "TMP_FIELD10"'>
+				AND	a.TMP_FIELD10 LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_CEL"'>
+				AND	a.USER_CEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "USER_TEL"'>
+				AND	a.USER_TEL LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchCnd == "NTT_CN"'>
+				AND	a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test='searchNotice == "Y"'>
+				AND	a.NOTICE_AT = 'Y' 		
+			</if>
+			<if test='searchCate != null and searchCate != ""'>
+				AND a.CATEGORY = #{searchCate}
+			</if>
+			<if test='searchCate1 != null and searchCate1 != ""'>
+				AND a.CATE_TYPE01 = #{searchCate1}
+			</if>
+			<if test='searchCate2 != null and searchCate2 != ""'>
+				AND a.CATE_TYPE02 = #{searchCate2}
+			</if>
+			<if test='searchCate3 != null and searchCate3 != ""'>
+				AND a.CATE_TYPE03 = #{searchCate3}
+			</if>
+					
+			ORDER BY a.FRST_REGIST_PNTTM ASC, a.SORT_ORDR DESC, NTT_NO ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC limit 1
+	</select>	
+ 
+	<select id="selectReplyArticle" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultMap="boardDetail">
+		SELECT
+			a.NTT_SJ, a.NTCR_ID, a.NTCR_NM, a.NTT_NO, a.NTT_CN,
+			a.PASSWORD, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+			DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+			a.NTCE_BGNDE, a.NTCE_ENDDE, a.RDCNT, a.CATEGORY,
+			a.USE_AT, a.ATCH_FILE_ID, a.BBS_ID, a.NTT_ID,
+			a.SJ_BOLD_AT, a.NOTICE_AT, a.SECRET_AT,
+			a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.SORT_ORDR,
+			a.USER_TEL, a.USER_CEL, a.ADDRESS, a.DETAIL_ADDR, a.ZIP_CODE, a.EMAIL, a.START_DATE,
+			a.END_DATE, a.TMP_FIELD1, a.TMP_FIELD2, a.TMP_FIELD3, a.TMP_FIELD4, a.TMP_FIELD5,
+			a.TMP_FIELD6, a.TMP_FIELD7, a.TMP_FIELD8, a.TMP_FIELD9, a.TMP_FIELD10,
+			c.BBS_TY_CODE, c.REPLY_POSBL_AT, 
+			c.FILE_ATCH_POSBL_AT, c.ATCH_POSBL_FILE_NUMBER, c.BBS_NM,
+               (SELECT COUNT(*) FROM COMTNFILEDETAIL cf WHERE a.ATCH_FILE_ID = cf.ATCH_FILE_ID) as FILE_CNT,
+			a.CATE_TYPE01, a.CATE_TYPE02, a.CATE_TYPE03, (SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE01) AS CATE_NAME01,
+			(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE02) AS CATE_NAME02,
+			(SELECT CATE_NAME FROM SPW_BBSCATE d WHERE d.BBS_ID = #{bbsId} AND d.CATE_CODE = a.CATE_TYPE03) AS CATE_NAME03
+		FROM
+			COMTNBBS a
+		LEFT OUTER JOIN 
+			COMVNUSERMASTER b
+		ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+		LEFT OUTER JOIN 
+			COMTNBBSMASTER c
+		ON a.BBS_ID = c.BBS_ID			
+		WHERE
+			a.PARNTSCTT_NO = #{parnts}
+		AND 
+			a.BBS_ID = #{bbsId}
+		AND 
+			a.USE_AT = 'Y'					
+		AND 
+			a.ANSWER_AT = 'Y'
+	</select>
+	
+ 	<update id="updateReplyArticle" parameterType="egovframework.com.cop.bbs.service.BoardVO">
+		UPDATE COMTNBBS SET 
+			NTT_SJ = #{nttSj},
+			NTT_CN = #{nttCn}, 
+			NTCR_NM = #{ntcrNm},
+			LAST_UPDUSR_ID = #{lastUpdusrId},
+			ATCH_FILE_ID = #{atchFileId},
+			LAST_UPDT_PNTTM = SYSDATE()
+		WHERE BBS_ID = #{bbsId}
+		AND NTT_ID = #{nttId}
+ 	</update>
+ 	
+ 	<select id="getReplyAt" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+ 		SELECT 
+ 			COUNT(NTT_ID) 
+ 		FROM COMTNBBS 
+ 		WHERE PARNTSCTT_NO = #{parnts}
+ 		AND BBS_ID = #{bbsId} 
+ 		AND USE_AT = 'Y'
+ 		AND ANSWER_AT = 'Y'
+ 	</select>
+ 	
+ 	<select id="selectPwCheck" parameterType="egovframework.com.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+ 		SELECT 
+ 			COUNT(NTT_ID) 
+ 		FROM COMTNBBS 
+ 		WHERE NTT_ID = #{nttId}
+ 		AND BBS_ID = #{bbsId}
+ 		AND PASSWORD = #{password} 
+ 		AND USE_AT = 'Y'
+ 	</select>
+	
+	
+	
+</mapper>

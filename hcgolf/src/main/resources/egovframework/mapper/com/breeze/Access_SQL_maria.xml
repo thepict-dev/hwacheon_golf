@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="accessMapper">
+
+	<select id="selectAccessList" parameterType="AccessVO" resultType="AccessVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				*
+			FROM SPW_ACCESS
+			WHERE USE_FLAG = 'Y'
+			ORDER BY REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectAccessListCnt" parameterType="AccessVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(a.ACCESS_ID)
+		FROM
+			SPW_ACCESS a
+		WHERE
+			USE_FLAG = 'Y'
+	</select>
+	
+	<select id="selectAccessView" parameterType="AccessVO" resultType="AccessVO">
+		SELECT
+			*
+		FROM
+			SPW_ACCESS a
+		WHERE
+			ACCESS_ID = #{accessId}
+		AND
+			USE_FLAG = 'Y'
+	</select>
+	
+	<insert id="accessInsert" parameterType="AccessVO">
+		<selectKey resultType="String" keyProperty="accessId" order="BEFORE">
+			SELECT #{accessId} AS accessId FROM dual
+		</selectKey>
+		INSERT INTO SPW_ACCESS
+			(ACCESS_ID, ACCESS_IP, ACCESS_DESCRIPTION, REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG)
+		VALUES
+			(#{accessId}, #{accessIp}, #{accessDescription}, #{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<update id="accessUpdate" parameterType="AccessVO">
+		UPDATE
+			SPW_ACCESS
+		SET
+			ACCESS_IP = #{accessIp},
+			ACCESS_DESCRIPTION = #{accessDescription},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			ACCESS_ID = #{accessId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<update id="accessDelete" parameterType="AccessVO">
+		UPDATE
+			SPW_ACCESS
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			ACCESS_ID = #{accessId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<select id="selectAuthorAccess" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			SPW_ACCESS a
+		WHERE
+			a.ACCESS_IP = #{accessIp}
+		AND
+			a.USE_FLAG = 'Y'
+	</select>
+	
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="defaultMapper">
+	
+	<select id="selectDefaultSetting" parameterType="defaultVO" resultType="defaultVO">
+		SELECT
+			*
+		FROM SPW_DEFAULT
+		WHERE DEFAULT_ID = #{defaultId}
+	</select>
+	
+	<insert id="defaultUpdate" parameterType="defaultVO">
+		INSERT INTO SPW_DEFAULT 
+			(DEFAULT_ID, DEFAULT_NAME, LOGO_FILE_ID, LOGO_FILE_PATH, IP_LIMIT_FLAG, REG_DATE, REG_ID, UPD_DATE, UPD_ID)
+		VALUES
+			(#{defaultId}, #{defaultName}, #{logoFileId}, #{logoFilePath}, #{ipLimitFlag}, SYSDATE(), #{regId}, SYSDATE(), #{updId})
+		ON DUPLICATE KEY UPDATE
+			DEFAULT_NAME = #{defaultName},
+			LOGO_FILE_ID = #{logoFileId},
+			LOGO_FILE_PATH = #{logoFilePath},
+			IP_LIMIT_FLAG = #{ipLimitFlag},
+			UPD_DATE = SYSDATE(),
+			UPD_ID = #{updId}
+	</insert>
+	
+	<delete id="defaultReset" parameterType="defaultVO">
+		DELETE FROM SPW_DEFAULT
+		WHERE DEFAULT_ID = #{defaultId}
+	</delete>
+	
+</mapper>

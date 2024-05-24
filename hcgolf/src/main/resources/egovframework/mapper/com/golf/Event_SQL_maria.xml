@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eventMapper">
+
+
+	<select id="selectScheduleList" parameterType="EventVO" resultType="EventVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				SCHEDULE_ID, TITLE, NTCR_NM, CAL_COLOR, PLACE, DATE_FORMAT(START_DATE, '%Y-%m-%d') as START_DATE, DATE_FORMAT(END_DATE, '%Y-%m-%d') as END_DATE, DATE_FORMAT(REG_DATE, '%Y-%m-%d') as REG_DATE
+			FROM GOLF_SCHEDULE
+			WHERE 1 = 1
+			AND USE_FLAG = 'Y'
+			<if test='searchCnd == "0"'>
+				AND (TITLE LIKE CONCAT('%', #{searchWrd}, '%') OR CONTENT LIKE CONCAT('%', #{searchWrd}, '%'))
+			</if>
+			<if test='searchCnd == "1"'>
+				AND TITLE LIKE CONCAT('%', #{searchWrd}, '%')
+			</if>
+			<if test='searchCnd == "2"'>
+				AND CONTENT LIKE CONCAT('%', #{searchWrd}, '%')
+			</if>
+			<if test='date != null and date != ""'>
+				AND DATE_FORMAT(#{date}, '%Y-%m-%d') BETWEEN START_DATE AND END_DATE
+			</if>
+			ORDER BY REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectScheduleListCnt" parameterType="EventVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(SCHEDULE_ID)
+		FROM
+			GOLF_SCHEDULE
+		WHERE 1 = 1
+		AND USE_FLAG = 'Y'
+		<if test='searchCnd == "0"'>
+			AND (TITLE LIKE CONCAT('%', #{searchWrd}, '%') OR CONTENT LIKE CONCAT('%', #{searchWrd}, '%'))
+		</if>
+		<if test='searchCnd == "1"'>
+			AND TITLE LIKE CONCAT('%', #{searchWrd}, '%')
+		</if>
+		<if test='searchCnd == "2"'>
+			AND CONTENT LIKE CONCAT('%', #{searchWrd}, '%')
+		</if>
+		<if test='date != null and date != ""'>
+			AND DATE_FORMAT(#{date}, '%Y-%m-%d') BETWEEN START_DATE AND END_DATE
+		</if>
+	</select>
+	
+	<select id="selectScheduleDetail" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			SCHEDULE_ID, TITLE, NTCR_NM, CAL_COLOR, PLACE, DATE_FORMAT(START_DATE, '%Y-%m-%d') as START_DATE, DATE_FORMAT(END_DATE, '%Y-%m-%d') as END_DATE, DATE_FORMAT(REG_DATE, '%Y-%m-%d') as REG_DATE, CONTENT, ATCH_FILE_ID
+		FROM
+			GOLF_SCHEDULE
+		WHERE 1 = 1
+		<if test='scheduleId != null and scheduleId != "" '>
+			AND SCHEDULE_ID = #{scheduleId}
+		</if>
+		AND USE_FLAG = 'Y'
+	</select>
+	
+	<insert id="scheduleInsert" parameterType="EventVO">
+		INSERT INTO GOLF_SCHEDULE
+			(SCHEDULE_ID, TITLE, NTCR_NM, CAL_COLOR, PLACE, START_DATE, END_DATE, CONTENT, ATCH_FILE_ID, REG_ID, REG_DATE, USE_FLAG)
+		VALUES
+			(#{scheduleId}, #{title}, #{ntcrNm}, #{calColor}, #{place}, #{startDate}, #{endDate}, #{content}, #{atchFileId}, #{regId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<update id="scheduleUpdate" parameterType="EventVO">
+		UPDATE
+			GOLF_SCHEDULE
+		SET
+			TITLE = #{title},
+			NTCR_NM = #{ntcrNm},
+			CAL_COLOR = #{calColor},
+			PLACE = #{place},
+			START_DATE = #{startDate},
+			END_DATE = #{endDate},
+			CONTENT = #{content},
+			ATCH_FILE_ID = #{atchFileId},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			SCHEDULE_ID = #{scheduleId}
+	</update>
+
+	<update id="scheduleDelete" parameterType="EventVO">
+		UPDATE
+			GOLF_SCHEDULE
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			SCHEDULE_ID = #{scheduleId}
+	</update>
+
+	<select id="eventList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			a.EVENT_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, DATE_FORMAT(a.OPEN_DATE, '%Y-%m-%d') as OPEN_DATE, a.EVENT_FLAG, AM_USE_FLAG, PM_USE_FLAG, AM_APPLY, AM_SPARE, PM_APPLY, PM_SPARE,
+			(SELECT IFNULL(SUM(b.ADULT_NUM),0) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND b.USE_FLAG='Y' AND b.AMPM = 'am' AND b.STATUS_FLAG != 'N') AS AM_APPLY_CNT,
+			(SELECT IFNULL(SUM(b.ADULT_NUM),0) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND b.USE_FLAG='Y' AND b.AMPM = 'pm' AND b.STATUS_FLAG != 'N') AS PM_APPLY_CNT,
+			(SELECT IFNULL(SUM(b.ADULT_NUM),0) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND b.USE_FLAG='Y' AND b.STATUS_FLAG != 'N') AS APPLY_CNT
+		FROM GOLF_EVENT a
+		WHERE 1 = 1
+		AND a.EVENT_FLAG = #{eventFlag}
+		AND a.USE_FLAG = 'Y'
+		ORDER BY a.EVENT_DATE ASC
+	</select>
+	
+	<select id="selectEventDetail" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			a.EVENT_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, DATE_FORMAT(a.OPEN_DATE, '%Y-%m-%d') as OPEN_DATE, a.AM_USE_FLAG, a.AM_APPLY, a.AM_SPARE, a.PM_USE_FLAG, a.PM_APPLY, a.PM_SPARE,
+			a.EVENT_FLAG, DATE_FORMAT(a.REG_DATE, '%Y-%m-%d') as REG_DATE,
+			(SELECT IFNULL(SUM(b.ADULT_NUM),0) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND b.USE_FLAG='Y' AND b.AMPM = 'am' AND b.STATUS_FLAG != 'N') AS AM_APPLY_CNT,
+			(SELECT IFNULL(SUM(b.ADULT_NUM),0) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND b.USE_FLAG='Y' AND b.AMPM = 'pm' AND b.STATUS_FLAG != 'N') AS PM_APPLY_CNT,
+			(SELECT IFNULL(SUM(b.ADULT_NUM),0) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND b.USE_FLAG='Y' AND b.STATUS_FLAG != 'N') AS APPLY_CNT
+		FROM
+			GOLF_EVENT a
+		WHERE 1 = 1
+		<if test='eventId != null and eventId != "" '>
+			AND a.EVENT_ID = #{eventId}
+		</if>
+		AND a.USE_FLAG = 'Y'
+	</select>
+
+	<select id="applyList" parameterType="EventVO" resultType="EventVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				a.APPLY_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, a.EVENT_TIME, a.APPLICANT, a.AGE, a.PHONE, a.EMAIL, a.ADDRESS, a.PARTICIPANT, a.ADULT_NUM, a.YOUTH_NUM, a.REMARK, a.ATCH_FILE_ID,
+				(SELECT b.FILE_SN FROM COMTNFILEDETAIL b WHERE a.ATCH_FILE_ID = b.ATCH_FILE_ID) AS FILE_SN, a.LUNCH_FLAG, a.AMPM, a.STATUS_FLAG, DATE_FORMAT(a.REG_DATE, '%Y-%m-%d %H:%i:%s') as REG_DATE
+			FROM GOLF_APPLY a
+			WHERE 1 = 1
+				AND a.EVENT_FLAG = #{eventFlag}
+			<if test='eventId != null and eventId != ""'>
+				AND a.EVENT_ID = #{eventId}
+			</if>
+			<if test='eventDate != null and eventDate != ""'>
+				AND a.EVENT_DATE LIKE CONCAT (#{eventDate},'%')
+			</if>
+			AND a.USE_FLAG = 'Y'
+			ORDER BY a.REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+	</select>
+	
+	<insert id="eventInsert" parameterType="EventVO">
+		INSERT INTO GOLF_EVENT
+			(EVENT_ID, EVENT_DATE, OPEN_DATE, AM_USE_FLAG, AM_APPLY, AM_SPARE, PM_USE_FLAG, PM_APPLY, PM_SPARE, EVENT_FLAG, REG_ID, REG_DATE, USE_FLAG)
+		VALUES
+			(#{eventId}, #{eventDate}, DATE_ADD(#{eventDate}, INTERVAL -14 DAY), #{amUseFlag}, #{amApply}, #{amSpare}, #{pmUseFlag}, #{pmApply}, #{pmSpare}, #{eventFlag}, #{regId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<update id="eventUpdate" parameterType="EventVO">
+		UPDATE
+			GOLF_EVENT
+		SET
+			EVENT_DATE = #{eventDate},
+			OPEN_DATE = DATE_ADD(#{eventDate}, INTERVAL -14 DAY),
+			AM_USE_FLAG = #{amUseFlag},
+			AM_APPLY = #{amApply},
+			AM_SPARE = #{amSpare},
+			PM_USE_FLAG = #{pmUseFlag},
+			PM_APPLY = #{pmApply},
+			PM_SPARE = #{pmSpare},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			EVENT_ID = #{eventId}
+	</update>
+
+	<update id="eventDelete" parameterType="EventVO">
+		UPDATE
+			GOLF_EVENT
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			EVENT_ID = #{eventId}
+	</update>
+
+	<update id="applyDelete" parameterType="EventVO">
+		UPDATE
+			GOLF_APPLY
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			EVENT_FLAG = #{eventFlag}
+		AND
+			EVENT_DATE LIKE CONCAT (#{eventDate},'%')
+		<if test='applyId != null and applyId != "" '>
+			AND
+				APPLY_ID = #{applyId}
+		</if>
+	</update>
+	
+	<insert id="applyInsert" parameterType="EventVO">
+		INSERT INTO GOLF_APPLY
+			(APPLY_ID, EVENT_ID, EVENT_DATE, EVENT_TIME, APPLICANT, PHONE, EVENT_FLAG, REG_ID, REG_DATE, USE_FLAG)
+		VALUES
+			((SELECT IFNULL(MAX(a.APPLY_ID)+1,1) FROM GOLF_APPLY a), #{eventId}, #{eventDate}, #{eventTime}, #{applicant}, #{phone}, #{eventFlag}, #{regId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<update id="applyUpdate" parameterType="EventVO">
+		UPDATE
+			GOLF_APPLY
+		SET
+			<if test='eventDate != null and eventDate != "" '>
+				EVENT_DATE = #{eventDate},
+			</if>
+			<if test='eventTime != null and eventTime != "" '>
+				EVENT_TIME = #{eventTime},
+			</if>
+			APPLICANT = #{applicant},
+			AGE = #{age},
+			PHONE = #{phone},
+			EMAIL = #{email},
+			ADDRESS = #{address},
+			PARTICIPANT = #{participant},
+			ADULT_NUM = #{adultNum},
+			YOUTH_NUM = #{youthNum},
+			REMARK = #{remark},
+			ATCH_FILE_ID = #{atchFileId},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE(),
+			LUNCH_FLAG = #{lunchFlag}
+		WHERE
+			APPLY_ID = #{applyId}
+	</update>
+
+	<select id="eventTimeSet" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			*
+		FROM GOLF_TIMESET
+	</select>
+
+	<select id="eventTimeList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			a.EVENT_TIME_ID, a.EVENT_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, a.EVENT_TIME, a.TIME_FLAG, a.AMPM, a.EVENT_FLAG,
+            (SELECT COUNT(*) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND a.EVENT_TIME_ID = b.EVENT_TIME_ID AND b.USE_FLAG = 'Y') AS APPLY_CNT
+		FROM GOLF_EVENTTIME a
+		WHERE 1=1
+		AND a.USE_FLAG = 'Y'
+		AND a.EVENT_FLAG = #{eventFlag}
+		<choose>
+			<when test="eventId != null and eventId !=''">
+				AND a.EVENT_ID = #{eventId}
+			</when>
+			<otherwise>
+				AND a.TIME_FLAG = 'Y'
+			</otherwise>
+		</choose>
+		ORDER BY a.EVENT_TIME ASC
+	</select>
+	
+	<select id="userEventTimeDayList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			a.EVENT_TIME_ID, a.EVENT_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, a.EVENT_TIME, a.TIME_FLAG, b.APPLICANT, b.APPLY_ID, a.AMPM, a.EVENT_FLAG,
+			IF(DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d %H:%i') &gt; SYSDATE(), '예약가능', '예약불가') AS APPLY_FLAG
+		FROM GOLF_EVENTTIME a
+		LEFT OUTER JOIN GOLF_APPLY b
+		ON a.EVENT_TIME_ID = B.EVENT_TIME_ID
+		and b.USE_FLAG = 'Y'
+		WHERE 1=1
+		AND a.USE_FLAG = 'Y'
+		AND a.EVENT_ID = #{eventId}
+		AND a.EVENT_FLAG = #{eventFlag}
+		AND a.TIME_FLAG = 'Y'
+		ORDER BY a.EVENT_TIME ASC
+	</select>
+	
+	<select id="gameEventTimeDayList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			UET.EVENT_TIME_ID, UET.EVENT_ID, DATE_FORMAT(UET.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, UET.EVENT_TIME, UET.TIME_FLAG, UET.AMPM, UET.EVENT_FLAG, DATE_FORMAT(UE.OPEN_DATE, '%Y-%m-%d %H:%i') as OPEN_DATE,
+			CASE WHEN UE.OPEN_DATE &gt; SYSDATE() THEN '예약대기' WHEN UET.EVENT_DATE &lt; SYSDATE() THEN '예약불가' ELSE '예약가능' END APPLY_FLAG,
+			(SELECT COUNT(*) FROM GOLF_APPLY UA WHERE UA.EVENT_TIME_ID = UET.EVENT_TIME_ID AND UA.USE_FLAG = 'Y') AS APPLY_CNT,
+			(CASE WHEN UET.AMPM = 'am' THEN (UE.AM_APPLY+UE.AM_SPARE) ELSE (UE.PM_APPLY+UE.PM_SPARE) END) AS LIMIT_CNT
+		FROM GOLF_EVENTTIME UET
+		LEFT OUTER JOIN GOLF_EVENT UE
+		ON UET.EVENT_ID = UE.EVENT_ID
+		WHERE UET.EVENT_ID = #{eventId}
+	    AND UET.EVENT_FLAG = #{eventFlag}
+		AND UET.USE_FLAG = 'Y'
+	</select>
+	
+	<select id="gameApplyCnt" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			UET.EVENT_TIME_ID, UET.EVENT_ID, DATE_FORMAT(UET.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, UET.EVENT_TIME, UET.TIME_FLAG, UET.AMPM, UET.EVENT_FLAG, DATE_FORMAT(UE.OPEN_DATE, '%Y-%m-%d %H:%i') as OPEN_DATE,
+			CASE WHEN UE.OPEN_DATE &gt; SYSDATE() THEN '예약대기' WHEN UET.EVENT_DATE &lt; SYSDATE() THEN '예약불가' ELSE '예약가능' END APPLY_FLAG,
+			(SELECT COUNT(*) FROM GOLF_APPLY UA WHERE UA.EVENT_TIME_ID = UET.EVENT_TIME_ID AND UA.USE_FLAG = 'Y') AS APPLY_CNT,
+			(CASE WHEN UET.AMPM = 'am' THEN (UE.AM_APPLY+UE.AM_SPARE) ELSE (UE.PM_APPLY+UE.PM_SPARE) END) AS LIMIT_CNT
+		FROM GOLF_EVENTTIME UET
+		LEFT OUTER JOIN GOLF_EVENT UE
+		ON UET.EVENT_ID = UE.EVENT_ID
+		WHERE UET.EVENT_ID = #{eventId}
+	    AND UET.EVENT_FLAG = #{eventFlag}
+	    AND UET.EVENT_TIME_ID = #{eventTimeId}
+		AND UET.USE_FLAG = 'Y'
+	</select>
+	
+	<select id="gameEventTimeMonList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			UET.EVENT_TIME_ID, UET.EVENT_ID, DATE_FORMAT(UET.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, UET.EVENT_TIME, UET.TIME_FLAG, UET.AMPM, UET.EVENT_FLAG, DATE_FORMAT(UE.OPEN_DATE, '%Y-%m-%d %H:%i') as OPEN_DATE,
+			CASE WHEN UE.OPEN_DATE &gt; SYSDATE() THEN '예약대기' ELSE '예약가능' END APPLY_FLAG,
+			(SELECT IFNULL(SUM(ADULT_NUM),0) FROM GOLF_APPLY UA WHERE UA.EVENT_TIME_ID = UET.EVENT_TIME_ID AND UA.USE_FLAG = 'Y' AND UA.STATUS_FLAG != 'N') AS APPLY_CNT,
+			SUM((CASE WHEN UET.AMPM = 'am' THEN (UE.AM_APPLY+UE.AM_SPARE) ELSE (UE.PM_APPLY+UE.PM_SPARE) END)) AS LIMIT_CNT
+		FROM GOLF_EVENTTIME UET
+		LEFT OUTER JOIN GOLF_EVENT UE
+		ON UET.EVENT_ID = UE.EVENT_ID
+		WHERE UET.EVENT_FLAG = #{eventFlag}
+        AND UET.EVENT_DATE > SYSDATE()
+		AND UET.USE_FLAG = 'Y'
+        group by UET.EVENT_ID
+	</select>
+	
+	<select id="userEventTimeMonList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			a.EVENT_TIME_ID, a.EVENT_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, a.EVENT_TIME, COUNT(IF(a.TIME_FLAG = 'Y', 1, null)) as TIME_CNT, a.TIME_FLAG, a.AMPM, a.EVENT_FLAG, a.EVENT_FLAG,
+            (SELECT COUNT(*) FROM GOLF_APPLY b WHERE a.EVENT_ID = b.EVENT_ID AND a.EVENT_TIME_ID = b.EVENT_TIME_ID AND b.USE_FLAG = 'Y') AS APPLY_CNT
+		FROM GOLF_EVENTTIME a
+		WHERE 1=1
+		AND a.USE_FLAG = 'Y'
+		AND a.EVENT_FLAG = #{eventFlag}
+		AND a.EVENT_DATE > SYSDATE()
+		<choose>
+			<when test="eventId != null and eventId !=''">
+				AND a.EVENT_ID = #{eventId}
+			</when>
+			<otherwise>
+				AND a.TIME_FLAG = 'Y'
+			</otherwise>
+		</choose>
+		group by a.EVENT_DATE
+		ORDER BY a.EVENT_DATE ASC
+	</select>
+	
+	<select id="selectEventVO" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			EVENT_TIME_ID, EVENT_ID, DATE_FORMAT(EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, EVENT_TIME, TIME_FLAG, AMPM, EVENT_FLAG,
+            (SELECT B.AM_USE_FLAG FROM GOLF_EVENT B WHERE B.EVENT_ID = A.EVENT_ID) AS AM_USE_FLAG 
+		FROM GOLF_EVENTTIME A
+		WHERE EVENT_ID = #{eventId} 
+		AND EVENT_TIME_ID = #{eventTimeId} 
+		AND USE_FLAG = 'Y'
+	</select>
+	
+	<select id="selectApplyCnt" parameterType="EventVO" resultType="java.lang.Integer">
+		SELECT 
+			IFNULL(SUM(ADULT_NUM),0)
+		FROM GOLF_APPLY
+		WHERE EVENT_ID = #{eventId} 
+		AND EVENT_TIME_ID = #{eventTimeId} 
+		AND EVENT_FLAG = #{eventFlag}
+		AND USE_FLAG = 'Y'
+		AND STATUS_FLAG != 'N'
+		<if test='regId != null and regId != "" '>
+			AND REG_ID = #{regId}
+		</if>
+	</select>
+	
+	<insert id="eventApply" parameterType="EventVO">
+		INSERT INTO GOLF_APPLY
+			(APPLY_ID, EVENT_ID, EVENT_TIME_ID, EVENT_DATE, EVENT_TIME, APPLICANT, PHONE, ADDRESS, PARTICIPANT, ADULT_NUM, YOUTH_NUM, AMPM, EVENT_FLAG, REG_ID, REG_DATE, USE_FLAG)
+		VALUES
+			((SELECT IFNULL(MAX(a.APPLY_ID)+1,1) FROM GOLF_APPLY a), #{eventId}, #{eventTimeId}, #{eventDate}, #{eventTime}, #{applicant}, #{phone}, #{address}, #{participant}, #{adultNum}, #{youthNum}, #{ampm}, #{eventFlag}, #{regId}, SYSDATE(), 'Y')
+	</insert>
+	
+	<select id="selectApplyDetail" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			a.EVENT_ID, a.APPLY_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, a.EVENT_TIME, a.APPLICANT, a.AGE, a.PHONE, a.EMAIL, a.ADDRESS, a.PARTICIPANT, a.ADULT_NUM, a.YOUTH_NUM, a.REMARK, a.ATCH_FILE_ID, a.EVENT_FLAG,
+			(SELECT b.FILE_SN FROM COMTNFILEDETAIL b WHERE a.ATCH_FILE_ID = b.ATCH_FILE_ID) AS FILE_SN, a.LUNCH_FLAG, a.STATUS_FLAG
+		FROM
+			GOLF_APPLY a
+		WHERE 1 = 1
+		<if test='eventDate != null and eventDate != "" '>
+			AND a.EVENT_DATE LIKE CONCAT (#{eventDate},'%')
+		</if>
+		<if test='applyId != null and applyId != "" '>
+			AND a.APPLY_ID = #{applyId}
+		</if>
+		AND a.USE_FLAG = 'Y'
+	</select>
+
+	<select id="eventEduList" parameterType="EventVO" resultType="EventVO">
+		SELECT
+			APPLY_ID, DATE_FORMAT(EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, EVENT_TIME, APPLICANT, PHONE, EVENT_FLAG
+		FROM
+			GOLF_APPLY
+		WHERE 1 = 1
+		AND EVENT_FLAG = #{eventFlag}
+		AND USE_FLAG = 'Y'
+		ORDER BY EVENT_TIME ASC
+	</select>
+	
+	<insert id="eventTimeInsert" parameterType="EventVO">
+		INSERT INTO GOLF_EVENTTIME
+			(EVENT_TIME_ID, EVENT_ID, EVENT_DATE, EVENT_TIME, TIME_FLAG, AMPM, EVENT_FLAG, USE_FLAG)
+		VALUES
+			((SELECT IFNULL(MAX(a.EVENT_TIME_ID)+1,1) FROM GOLF_EVENTTIME a), #{eventId}, #{eventDate}, #{eventTime}, #{timeFlag}, #{ampm}, #{eventFlag}, #{useFlag})
+	</insert>
+
+	<update id="eventTimeDelete" parameterType="String">
+		UPDATE
+			GOLF_EVENTTIME
+		SET
+			USE_FLAG = 'N'
+		WHERE
+			EVENT_ID = #{eventId}
+	</update>
+
+	<select id="eventRegistChk" parameterType="EventVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM GOLF_EVENT
+		WHERE 1 = 1
+		AND EVENT_FLAG = #{eventFlag}
+		AND EVENT_DATE LIKE CONCAT (#{eventDate},'%')
+		AND USE_FLAG = 'Y'
+	</select>
+
+	<update id="eventTimeUpdate" parameterType="EventVO">
+		UPDATE
+			GOLF_EVENTTIME
+		SET
+			EVENT_DATE = #{eventDate},
+			USE_FLAG = #{useFlag}
+			<if test='eventTime != null and eventTime != "" '>
+				,EVENT_TIME = #{eventTime}
+			</if>
+			<if test='timeFlag != null and timeFlag != "" '>
+				,TIME_FLAG = #{timeFlag}
+			</if>
+		WHERE
+			EVENT_ID = #{eventId}
+		<if test='eventTimeId != null and eventTimeId != "" '>
+			AND
+				EVENT_TIME_ID = #{eventTimeId}
+		</if>
+		<if test='ampm != null and ampm != "" '>
+			AND
+				AMPM = #{ampm}
+		</if>
+	</update>
+	
+	
+	<update id="statusUpdate" parameterType="EventVO">
+		UPDATE
+			GOLF_APPLY
+		SET
+			STATUS_FLAG = #{statusFlag},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			APPLY_ID = #{applyId}
+			<if test='regId != null and regId != "" '>
+				AND REG_ID = #{regId}
+			</if>
+	</update>
+	
+
+	<select id="selectUserApplyList" parameterType="String" resultType="EventVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				a.APPLY_ID, DATE_FORMAT(a.EVENT_DATE, '%Y-%m-%d') as EVENT_DATE, a.EVENT_TIME, a.APPLICANT, a.AGE, a.PHONE, a.EMAIL, a.ADDRESS, a.PARTICIPANT, a.ADULT_NUM, a.YOUTH_NUM, a.REMARK, a.ATCH_FILE_ID,
+				(SELECT b.FILE_SN FROM COMTNFILEDETAIL b WHERE a.ATCH_FILE_ID = b.ATCH_FILE_ID) AS FILE_SN, a.LUNCH_FLAG, a.AMPM, a.STATUS_FLAG, DATE_FORMAT(a.REG_DATE, '%Y-%m-%d %H:%i:%s') as REG_DATE
+			FROM GOLF_APPLY a
+			WHERE 1 = 1
+			AND a.REG_ID = #{memberId}
+			AND a.USE_FLAG = 'Y'
+			ORDER BY a.REG_DATE ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+	</select>
+	
+	<insert id="sendSms" parameterType="EventVO">
+		INSERT INTO SDK_SMS_SEND
+			(USER_ID, SCHEDULE_TYPE, SUBJECT, SMS_MSG, CALLBACK_URL, NOW_DATE, SEND_DATE, CALLBACK, DEST_INFO)
+		VALUES
+			('ihc02', 0, #{smsTitle}, #{smsMsg}, '', DATE_FORMAT(NOW(), '%Y%m%d%H%i'), DATE_FORMAT(NOW(), '%Y%m%d%H%i'), '033-441-0797', #{destInfo})
+	</insert>
+	
+</mapper>

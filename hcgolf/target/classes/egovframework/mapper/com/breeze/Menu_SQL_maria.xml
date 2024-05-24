@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="menuMapper">
+
+
+	<select id="selectMenuList" parameterType="MenuVO" resultType="MenuVO">
+		SELECT
+			*
+		FROM SPW_MENU
+		WHERE USE_FLAG = 'Y'
+		AND MENU_DEPTH = #{menuDepth}
+		<if test="upperMenuId != null and upperMenuId != '' and upperMenuId != 'null'">
+			AND UPPER_MENU_ID = #{upperMenuId}
+		</if>
+		ORDER BY MENU_NO*1 ASC, REG_DATE DESC
+	</select>
+	
+	<select id="selectMenuView" parameterType="MenuVO" resultType="MenuVO">
+		SELECT
+			a.*, b.contents_name
+		FROM
+			SPW_MENU a, SPW_CONTENTS b
+		WHERE
+			a.MENU_ID = #{menuId}
+		AND
+			a.USE_FLAG = 'Y'
+		AND
+			a.CONTENTS_ID = b.CONTENTS_ID
+	</select>
+	
+	<insert id="menuInsert" parameterType="MenuVO">
+		<selectKey resultType="String" keyProperty="menuId" order="BEFORE">
+			SELECT #{menuId} AS menuId FROM dual
+		</selectKey>
+		<!--:::::::::::::::::::::::::::::::::::::::: 1DEPTH 등록 시작 ::::::::::::::::::::::::::::::::::::::::-->
+		<if test="menuDepth.equals('dep0')">
+			INSERT INTO SPW_MENU
+				(
+					MENU_DEPTH, MENU_ID_DEPTH1, MENU_NAME_DEPTH1,
+					MENU_ID, UPPER_MENU_ID, MENU_NAME, MENU_TITLE, MENU_USE_FLAG, MENU_VIEW_FLAG,
+					SEO_PAGE_TITLE, SEO_NAVI_TITLE, SEO_KEYWORDS, SEO_DESCRIPTION, SEO_IMAGE_URL, SEO_OG_TYPE, SEO_TWITTER_CARD,
+					CONTENTS_ID, MENU_NO,
+					REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG
+				)
+			VALUES
+				(
+					'dep1', #{menuId}, #{menuName},
+					#{menuId}, #{menuId}, #{menuName}, #{menuTitle}, #{menuUseFlag}, #{menuViewFlag},
+					#{seoPageTitle}, #{seoNaviTitle}, #{seoKeywords}, #{seoDescription}, #{seoImageUrl}, #{seoOgType}, #{seoTwitterCard},
+					#{contentsId}, #{menuNo},
+					#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y'
+				)
+		</if>
+		<!--:::::::::::::::::::::::::::::::::::::::: 1DEPTH 등록 종료 ::::::::::::::::::::::::::::::::::::::::-->
+		<!--:::::::::::::::::::::::::::::::::::::::: 2DEPTH 등록 시작 ::::::::::::::::::::::::::::::::::::::::-->
+		<if test="menuDepth.equals('dep1')">
+			INSERT INTO SPW_MENU
+				(
+					MENU_DEPTH, MENU_ID_DEPTH1, MENU_NAME_DEPTH1, MENU_ID_DEPTH2, MENU_NAME_DEPTH2,
+					MENU_ID, UPPER_MENU_ID, MENU_NAME, MENU_TITLE, MENU_USE_FLAG, MENU_VIEW_FLAG,
+					SEO_PAGE_TITLE, SEO_NAVI_TITLE, SEO_KEYWORDS, SEO_DESCRIPTION, SEO_IMAGE_URL, SEO_OG_TYPE, SEO_TWITTER_CARD,
+					CONTENTS_ID, MENU_NO,
+					REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG
+				)
+			VALUES
+				(
+					'dep2', #{menuIdDepth1}, #{menuNameDepth1}, #{menuId}, #{menuName},
+					#{menuId}, #{upperMenuId}, #{menuName}, #{menuTitle}, #{menuUseFlag}, #{menuViewFlag},
+					#{seoPageTitle}, #{seoNaviTitle}, #{seoKeywords}, #{seoDescription}, #{seoImageUrl}, #{seoOgType}, #{seoTwitterCard},
+					#{contentsId}, #{menuNo},
+					#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y'
+				)
+		</if>
+		<!--:::::::::::::::::::::::::::::::::::::::: 2DEPTH 등록 종료 ::::::::::::::::::::::::::::::::::::::::-->
+		<!--:::::::::::::::::::::::::::::::::::::::: 3DEPTH 등록 시작 ::::::::::::::::::::::::::::::::::::::::-->
+		<if test="menuDepth.equals('dep2')">
+			INSERT INTO SPW_MENU
+				(
+					MENU_DEPTH, MENU_ID_DEPTH1, MENU_NAME_DEPTH1, MENU_ID_DEPTH2, MENU_NAME_DEPTH2, MENU_ID_DEPTH3, MENU_NAME_DEPTH3,
+					MENU_ID, UPPER_MENU_ID, MENU_NAME, MENU_TITLE, MENU_USE_FLAG, MENU_VIEW_FLAG,
+					SEO_PAGE_TITLE, SEO_NAVI_TITLE, SEO_KEYWORDS, SEO_DESCRIPTION, SEO_IMAGE_URL, SEO_OG_TYPE, SEO_TWITTER_CARD,
+					CONTENTS_ID, MENU_NO,
+					REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG
+				)
+			VALUES
+				(
+					'dep3', #{menuIdDepth1}, #{menuNameDepth1}, #{menuIdDepth2}, #{menuNameDepth2}, #{menuId}, #{menuName},
+					#{menuId}, #{upperMenuId}, #{menuName}, #{menuTitle}, #{menuUseFlag}, #{menuViewFlag},
+					#{seoPageTitle}, #{seoNaviTitle}, #{seoKeywords}, #{seoDescription}, #{seoImageUrl}, #{seoOgType}, #{seoTwitterCard},
+					#{contentsId}, #{menuNo},
+					#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y'
+				)
+		</if>
+		<!--:::::::::::::::::::::::::::::::::::::::: 3DEPTH 등록 종료 ::::::::::::::::::::::::::::::::::::::::-->
+		<!--:::::::::::::::::::::::::::::::::::::::: 4DEPTH 등록 시작 ::::::::::::::::::::::::::::::::::::::::-->
+		<if test="menuDepth.equals('dep3')">
+			INSERT INTO SPW_MENU
+				(
+					MENU_DEPTH, MENU_ID_DEPTH1, MENU_NAME_DEPTH1, MENU_ID_DEPTH2, MENU_NAME_DEPTH2, MENU_ID_DEPTH3, MENU_NAME_DEPTH3, MENU_ID_DEPTH4, MENU_NAME_DEPTH4,
+					MENU_ID, UPPER_MENU_ID, MENU_NAME, MENU_TITLE, MENU_USE_FLAG, MENU_VIEW_FLAG,
+					SEO_PAGE_TITLE, SEO_NAVI_TITLE, SEO_KEYWORDS, SEO_DESCRIPTION, SEO_IMAGE_URL, SEO_OG_TYPE, SEO_TWITTER_CARD,
+					CONTENTS_ID, MENU_NO,
+					REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG
+				)
+			VALUES
+				(
+					'dep4', #{menuIdDepth1}, #{menuNameDepth1}, #{menuIdDepth2}, #{menuNameDepth2}, #{menuIdDepth3}, #{menuNameDepth3}, #{menuId}, #{menuName},
+					#{menuId}, #{upperMenuId}, #{menuName}, #{menuTitle}, #{menuUseFlag}, #{menuViewFlag},
+					#{seoPageTitle}, #{seoNaviTitle}, #{seoKeywords}, #{seoDescription}, #{seoImageUrl}, #{seoOgType}, #{seoTwitterCard},
+					#{contentsId}, #{menuNo},
+					#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y'
+				)
+		</if>
+		<!--:::::::::::::::::::::::::::::::::::::::: 4DEPTH 등록 종료 ::::::::::::::::::::::::::::::::::::::::-->
+		<!--:::::::::::::::::::::::::::::::::::::::: 5DEPTH 등록 시작 ::::::::::::::::::::::::::::::::::::::::-->
+		<if test="menuDepth.equals('dep4')">
+			INSERT INTO SPW_MENU
+				(
+					MENU_DEPTH, MENU_ID_DEPTH1, MENU_NAME_DEPTH1, MENU_ID_DEPTH2, MENU_NAME_DEPTH2, MENU_ID_DEPTH3, MENU_NAME_DEPTH3, MENU_ID_DEPTH4, MENU_NAME_DEPTH4, MENU_ID_DEPTH5, MENU_NAME_DEPTH5,
+					MENU_ID, UPPER_MENU_ID, MENU_NAME, MENU_TITLE, MENU_USE_FLAG, MENU_VIEW_FLAG,
+					SEO_PAGE_TITLE, SEO_NAVI_TITLE, SEO_KEYWORDS, SEO_DESCRIPTION, SEO_IMAGE_URL, SEO_OG_TYPE, SEO_TWITTER_CARD,
+					CONTENTS_ID, MENU_NO,
+					REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG
+				)
+			VALUES
+				(
+					'dep5', #{menuIdDepth1}, #{menuNameDepth1}, #{menuIdDepth2}, #{menuNameDepth2}, #{menuIdDepth3}, #{menuNameDepth3}, #{menuIdDepth4}, #{menuNameDepth4}, #{menuId}, #{menuName},
+					#{menuId}, #{upperMenuId}, #{menuName}, #{menuTitle}, #{menuUseFlag}, #{menuViewFlag},
+					#{seoPageTitle}, #{seoNaviTitle}, #{seoKeywords}, #{seoDescription}, #{seoImageUrl}, #{seoOgType}, #{seoTwitterCard},
+					#{contentsId}, #{menuNo},
+					#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y'
+				)
+		</if>
+		<!--:::::::::::::::::::::::::::::::::::::::: 5DEPTH 등록 종료 ::::::::::::::::::::::::::::::::::::::::-->
+		<!--:::::::::::::::::::::::::::::::::::::::: 6DEPTH 등록 시작 ::::::::::::::::::::::::::::::::::::::::-->
+		<if test="menuDepth.equals('dep5')">
+			INSERT INTO SPW_MENU
+				(
+					MENU_DEPTH, MENU_ID_DEPTH1, MENU_NAME_DEPTH1, MENU_ID_DEPTH2, MENU_NAME_DEPTH2, MENU_ID_DEPTH3, MENU_NAME_DEPTH3, MENU_ID_DEPTH4, MENU_NAME_DEPTH4, MENU_ID_DEPTH5, MENU_NAME_DEPTH5, MENU_ID_DEPTH6, MENU_NAME_DEPTH6,
+					MENU_ID, UPPER_MENU_ID, MENU_NAME, MENU_TITLE, MENU_USE_FLAG, MENU_VIEW_FLAG,
+					SEO_PAGE_TITLE, SEO_NAVI_TITLE, SEO_KEYWORDS, SEO_DESCRIPTION, SEO_IMAGE_URL, SEO_OG_TYPE, SEO_TWITTER_CARD,
+					CONTENTS_ID, MENU_NO,
+					REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG
+				)
+			VALUES
+				(
+					'dep6', #{menuIdDepth1}, #{menuNameDepth1}, #{menuIdDepth2}, #{menuNameDepth2}, #{menuIdDepth3}, #{menuNameDepth3}, #{menuIdDepth4}, #{menuNameDepth4}, #{menuIdDepth5}, #{menuNameDepth5}, #{menuId}, #{menuName},
+					#{menuId}, #{upperMenuId}, #{menuName}, #{menuTitle}, #{menuUseFlag}, #{menuViewFlag},
+					#{seoPageTitle}, #{seoNaviTitle}, #{seoKeywords}, #{seoDescription}, #{seoImageUrl}, #{seoOgType}, #{seoTwitterCard},
+					#{contentsId}, #{menuNo},
+					#{regId}, SYSDATE(), #{updId}, SYSDATE(), 'Y'
+				)
+		</if>
+		<!--:::::::::::::::::::::::::::::::::::::::: 6DEPTH 등록 종료 ::::::::::::::::::::::::::::::::::::::::-->
+	</insert>
+	
+	<update id="menuUpdate" parameterType="MenuVO">
+		UPDATE
+			SPW_MENU
+		SET
+			<if test="menuDepth.equals('dep1')"> MENU_ID_DEPTH1 = #{menuIdDepth1}, MENU_NAME_DEPTH1 = #{menuNameDepth1}, </if>
+			<if test="menuDepth.equals('dep2')"> MENU_ID_DEPTH2 = #{menuIdDepth2}, MENU_NAME_DEPTH2 = #{menuNameDepth2}, </if>
+			<if test="menuDepth.equals('dep3')"> MENU_ID_DEPTH3 = #{menuIdDepth3}, MENU_NAME_DEPTH3 = #{menuNameDepth3}, </if>
+			<if test="menuDepth.equals('dep4')"> MENU_ID_DEPTH4 = #{menuIdDepth4}, MENU_NAME_DEPTH4 = #{menuNameDepth4}, </if>
+			<if test="menuDepth.equals('dep5')"> MENU_ID_DEPTH5 = #{menuIdDepth5}, MENU_NAME_DEPTH5 = #{menuNameDepth5}, </if>
+			<if test="menuDepth.equals('dep6')"> MENU_ID_DEPTH6 = #{menuIdDepth6}, MENU_NAME_DEPTH6 = #{menuNameDepth6}, </if>
+			
+			MENU_ID			= #{menuId},
+			MENU_NAME		= #{menuName},
+			MENU_TITLE		= #{menuTitle},
+			MENU_USE_FLAG	= #{menuUseFlag},
+			MENU_VIEW_FLAG	= #{menuViewFlag},
+			
+			SEO_PAGE_TITLE	= #{seoPageTitle},
+			SEO_NAVI_TITLE	= #{seoNaviTitle},
+			SEO_KEYWORDS	= #{seoKeywords},
+			SEO_DESCRIPTION	= #{seoDescription},
+			SEO_IMAGE_URL	= #{seoImageUrl},
+			SEO_OG_TYPE		= #{seoOgType},
+			SEO_TWITTER_CARD= #{seoTwitterCard},
+			
+			CONTENTS_ID		= #{contentsId},
+			MENU_NO			= #{menuNo},
+			
+			UPD_ID			= #{updId},
+			UPD_DATE		= SYSDATE()
+		WHERE
+			MENU_ID = #{menuId}
+		AND
+			MENU_DEPTH = #{menuDepth}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<update id="menuDepthUpdate" parameterType="MenuVO">
+		UPDATE
+			SPW_MENU
+		SET
+			<if test="menuDepth.equals('dep1')"> MENU_NAME_DEPTH1 = #{menuName} </if>
+			<if test="menuDepth.equals('dep2')"> MENU_NAME_DEPTH2 = #{menuName} </if>
+			<if test="menuDepth.equals('dep3')"> MENU_NAME_DEPTH3 = #{menuName} </if>
+			<if test="menuDepth.equals('dep4')"> MENU_NAME_DEPTH4 = #{menuName} </if>
+			<if test="menuDepth.equals('dep5')"> MENU_NAME_DEPTH5 = #{menuName} </if>
+		WHERE
+			USE_FLAG = 'Y'
+		<if test="menuDepth.equals('dep1')"> AND MENU_ID_DEPTH1 = #{menuId} </if>
+		<if test="menuDepth.equals('dep2')"> AND MENU_ID_DEPTH2 = #{menuId} </if>
+		<if test="menuDepth.equals('dep3')"> AND MENU_ID_DEPTH3 = #{menuId} </if>
+		<if test="menuDepth.equals('dep4')"> AND MENU_ID_DEPTH4 = #{menuId} </if>
+		<if test="menuDepth.equals('dep5')"> AND MENU_ID_DEPTH5 = #{menuId} </if>
+	</update>
+	
+	<update id="menuDelete" parameterType="MenuVO">
+		UPDATE
+			SPW_MENU
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			MENU_ID = #{menuId}
+		AND
+			USE_FLAG = 'Y'
+	</update>
+	
+	<select id="menuNameOverlapChk" parameterType="MenuVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			SPW_MENU a
+		WHERE
+			MENU_NAME = #{menuName}
+		AND
+			USE_FLAG = 'Y'
+		<if test="menuDepth.equals('dep0')">
+			AND MENU_DEPTH = 'dep1'
+		</if>
+		<if test="!menuDepth.equals('dep0')">
+			AND MENU_DEPTH != 'dep1'
+			AND UPPER_MENU_ID = #{upperMenuId}
+		</if>
+	</select>
+	
+	<select id="menuNameOverlapChk2" parameterType="MenuVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			SPW_MENU a
+		WHERE
+			MENU_NAME = #{menuName}
+		AND
+			USE_FLAG = 'Y'
+		<if test="menuDepth.equals('dep1')">
+			AND MENU_DEPTH = 'dep1'
+		</if>
+		<if test="!menuDepth.equals('dep1')">
+			AND MENU_DEPTH != 'dep1'
+			AND UPPER_MENU_ID = #{upperMenuId}
+		</if>
+	</select>
+	
+	<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 번들 영역 start ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+	<select id="getMenuListDepth" parameterType="MenuVO" resultType="MenuVO">
+		SELECT
+			*
+		FROM SPW_MENU
+		WHERE USE_FLAG = 'Y'
+		AND MENU_USE_FLAG = 'Y'
+		AND MENU_VIEW_FLAG = 'Y'
+		AND MENU_DEPTH = #{menuDepth}
+		<if test="upperMenuId != null and upperMenuId != '' and upperMenuId != 'null'">
+			AND UPPER_MENU_ID = #{upperMenuId}
+		</if>
+		ORDER BY MENU_NO*1 ASC, REG_DATE DESC
+	</select>
+	
+	<select id="selectMenuLowList" parameterType="MenuVO" resultType="MenuVO">
+		SELECT
+			*
+		FROM SPW_MENU
+		WHERE USE_FLAG = 'Y'
+		AND MENU_USE_FLAG = 'Y'
+		AND MENU_VIEW_FLAG = 'Y'
+		AND UPPER_MENU_ID = #{menuId}
+		AND MENU_ID != UPPER_MENU_ID
+		ORDER BY MENU_DEPTH ASC, MENU_NO*1 ASC, REG_DATE DESC
+	</select>
+	
+	<select id="selectMenuAllList" resultType="MenuVO">
+		SELECT
+			*
+		FROM SPW_MENU
+		WHERE USE_FLAG = 'Y'
+		AND MENU_USE_FLAG = 'Y'
+		AND MENU_VIEW_FLAG = 'Y'
+		ORDER BY MENU_DEPTH ASC, MENU_NO*1 ASC, REG_DATE DESC
+	</select>
+	
+	<select id="getMenuIdTitle" parameterType="String" resultType="String">
+		SELECT
+			MENU_TITLE
+		FROM SPW_MENU
+		WHERE USE_FLAG = 'Y'
+		AND MENU_USE_FLAG = 'Y'
+		AND MENU_ID=#{menuId}
+	</select>
+	
+	<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 번들 영역 end ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+</mapper>

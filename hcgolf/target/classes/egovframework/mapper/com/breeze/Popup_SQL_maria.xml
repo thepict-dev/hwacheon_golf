@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="popupMapper">
+
+	<insert id="insertPopup" parameterType="popupVO">
+		<selectKey resultType="String" keyProperty="popupId" order="BEFORE">
+			SELECT #{popupId} AS popupId FROM dual
+		</selectKey>
+		INSERT INTO SPW_POPUP
+			(POPUP_ID, POPUP_TITLE, CATEGORY, START_DATE, END_DATE, VIEW_FLAG, ATCH_FILE_ID, URL, TARGET, ALT_TEXT, IR, SIZE_WIDTH, SIZE_HEIGHT, VIEW_WIDTH, VIEW_HEIGHT, FLAG, REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG, POPUP_ORDER)
+		VALUES
+			(#{popupId}, #{popupTitle}, #{category}, #{startDate}, #{endDate}, #{viewFlag}, #{atchFileId}, #{url}, #{target}, #{altText}, #{ir}, #{sizeWidth}, #{sizeHeight}, #{viewWidth}, #{viewHeight}, #{flag}, #{regId}, NOW(), #{updId}, NOW(), 'Y', #{popupOrder})
+	</insert>
+	
+	<select id="selectPopupView" parameterType="PopupVO" resultType="PopupVO">
+		SELECT
+			POPUP_ID, POPUP_TITLE, CATEGORY, START_DATE, END_DATE, VIEW_FLAG, ATCH_FILE_ID, URL, TARGET, ALT_TEXT, IR, SIZE_WIDTH, SIZE_HEIGHT, VIEW_WIDTH, VIEW_HEIGHT, FLAG, REG_ID, REG_DATE, UPD_ID, UPD_DATE, USE_FLAG, POPUP_ORDER
+		FROM
+			SPW_POPUP a
+		WHERE
+			POPUP_ID = #{popupId}
+		AND
+			USE_FLAG = 'Y'
+	</select>
+	
+	<select id="selectPopupList" parameterType="PopupVO" resultType="PopupVO">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT
+				POPUP_ID,
+				POPUP_TITLE,
+				CATEGORY,
+				DATE_FORMAT(START_DATE, '%Y-%m-%d %H:%i') AS START_DATE,
+				DATE_FORMAT(END_DATE, '%Y-%m-%d %H:%i') AS END_DATE,
+				VIEW_FLAG,
+				ATCH_FILE_ID,
+				DATE_FORMAT(a.REG_DATE,'%Y-%m-%d %H:%i:%s') AS REG_DATE,
+				POPUP_ORDER
+			FROM SPW_POPUP a
+			WHERE USE_FLAG = 'Y'
+			AND FLAG = #{flag}
+			<if test='searchCnd == "0"'>
+				AND POPUP_TITLE LIKE CONCAT ('%', #{searchWrd} '%')
+			</if>
+			ORDER BY REG_DATE ASC
+		)t, (SELECT @RNUM := 0 ) R
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	
+	<select id="selectPopupListCnt"  parameterType="PopupVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(a.POPUP_ID)
+		FROM
+			SPW_POPUP a
+		WHERE
+			USE_FLAG ='Y' 
+		AND
+			FLAG = #{flag}
+			<if test='searchCnd == "0"'>
+				AND POPUP_TITLE LIKE CONCAT ('%', #{searchWrd} '%')
+			</if>
+	</select>
+	
+	<update id="updatePopup" parameterType="PopupVO">
+		UPDATE
+			SPW_POPUP
+		SET
+			POPUP_TITLE = #{popupTitle},
+			CATEGORY = #{category},
+			START_DATE = #{startDate},
+			END_DATE = #{endDate},
+			VIEW_FLAG = #{viewFlag},
+			ATCH_FILE_ID = #{atchFileId},
+			URL = #{url},
+			TARGET = #{target},
+			ALT_TEXT = #{altText},
+			IR = #{ir},
+			SIZE_WIDTH = #{sizeWidth},
+			SIZE_HEIGHT = #{sizeHeight},
+			VIEW_WIDTH = #{viewWidth},
+			VIEW_HEIGHT = #{viewHeight},
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE(),
+			POPUP_ORDER = #{popupOrder}
+		WHERE
+			POPUP_ID = #{popupId}
+		AND
+			USE_FLAG = 'Y'
+		AND
+			FLAG = #{flag}
+	</update>
+	
+	<update id="deletePopup" parameterType="PopupVO">
+		UPDATE
+			SPW_POPUP
+		SET
+			USE_FLAG = 'N',
+			UPD_ID = #{updId},
+			UPD_DATE = SYSDATE()
+		WHERE
+			POPUP_ID = #{popupId}
+		AND
+			USE_FLAG = 'Y'
+		AND
+			FLAG = #{flag}
+	</update>
+	
+	<select id="selectMainPopupList" parameterType="PopupVO" resultType="PopupVO">
+		SELECT
+			*
+		FROM SPW_POPUP a
+		WHERE USE_FLAG = 'Y'
+		AND VIEW_FLAG = 'Y'
+		AND FLAG = #{flag}
+		<if test='flag == "INFO"'>
+			AND CATEGORY = #{category}
+		</if>
+		AND START_DATE &lt;= SYSDATE() AND END_DATE &gt;= SYSDATE()
+		ORDER BY POPUP_ORDER ASC, REG_DATE DESC
+	</select>
+	
+</mapper>

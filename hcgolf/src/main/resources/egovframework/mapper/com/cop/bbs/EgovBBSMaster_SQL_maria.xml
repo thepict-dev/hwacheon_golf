@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BBSMaster">
+
+	<resultMap id="boardMasterList" type="egovframework.com.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsTyCodeNm" column="BBS_TY_CODE_NM"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="tmplatId" column="TMPLAT_ID"/>
+		<result property="deleteFlag" column="DELETE_FLAG"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>
+
+	<resultMap id="boardMasterDetail" type="egovframework.com.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="bbsIntrcn" column="BBS_INTRCN"/>
+		<result property="replyPosblAt" column="REPLY_POSBL_AT"/>
+		<result property="fileAtchPosblAt" column="FILE_ATCH_POSBL_AT"/>
+		<result property="atchPosblFileNumber" column="ATCH_POSBL_FILE_NUMBER"/>
+		<result property="atchPosblFileSize" column="ATCH_POSBL_FILE_SIZE"/>
+		<result property="tmplatId" column="TMPLAT_ID"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="bbsTyCodeNm" column="BBS_TY_CODE_NM"/>
+ 	    <result property="tmplatNm" column="TMPLAT_NM"/>
+		<result property="authFlag" column="AUTH_FLAG"/>
+		<result property="tmplatCours" column="TMPLAT_COURS"/>
+		<result property="cmmntyId" column="CMMNTY_ID"/>
+		<result property="blogId" column="BLOG_ID"/>
+		<result property="bbsOrder" column="BBS_ORDER"/>
+		<result property="bbsPageUnit" column="BBS_PAGE_UNIT"/>
+		<result property="deleteFlag" column="DELETE_FLAG"/>
+		<result property="cateType01" column="CATE_TYPE01"/>
+		<result property="cateType02" column="CATE_TYPE02"/>
+		<result property="cateType03" column="CATE_TYPE03"/>
+		<result property="skinId" column="SKIN_ID"/>
+		<result property="writeBtnFlag" column="WRITE_BTN_FLAG"/>
+		<result property="updateBtnFlag" column="UPDATE_BTN_FLAG"/>
+		<result property="deleteBtnFlag" column="DELETE_BTN_FLAG"/>
+		<result property="replyBtnFlag" column="REPLY_BTN_FLAG"/>
+		<result property="secretPosblAt" column="SECRET_POSBL_AT"/>
+		<result property="loginChkAt" column="LOGIN_CHK_AT"/>
+		<result property="noticePosblAt" column="NOTICE_POSBL_AT"/>
+		
+	</resultMap>
+
+	<resultMap id="boardMasterAll" type="egovframework.com.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="tmplatId" column="TMPLAT_ID"/>
+	</resultMap>
+	
+	<resultMap id="BlogList" type="egovframework.com.cop.bbs.service.BlogVO">
+		<result property="blogId" column="BLOG_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="blogNm" column="BLOG_NM"/>
+		<result property="registSeCode" column="REGIST_SE_CODE"/>
+		<result property="registSeCodeNm" column="REGIST_SE_CODE_NM"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>
+	
+	<resultMap id="selectBlogDetail" type="egovframework.com.cop.bbs.service.BlogVO">
+		<result property="blogId" column="BLOG_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="blogNm" column="BLOG_NM"/>
+		<result property="blogIntrcn" column="BLOG_INTRCN"/>
+	</resultMap>
+	
+	<resultMap id="selectBlogUser" type="egovframework.com.cop.bbs.service.BlogVO">
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+	</resultMap>
+	
+	<resultMap id="BlogListPortlet" type="egovframework.com.cop.bbs.service.BlogVO">
+		<result property="blogId" column="BLOG_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="blogNm" column="BLOG_NM"/>
+	</resultMap>
+		
+	<resultMap id="BBSListPortlet" type="egovframework.com.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCodeNm" column="BBS_TY_CODE"/>
+		<result property="bbsNm" column="BBS_NM"/>
+	</resultMap>
+
+	<resultMap id="boardItemList" type="egovframework.com.cop.bbs.service.BoardItemVO">
+		<result property="itemId" column="ITEM_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="fieldId" column="FIELD_ID"/>
+		<result property="itemName" column="ITEM_NAME"/>
+		<result property="itemPercent" column="ITEM_PERCENT"/>
+		<result property="itemOrder" column="ITEM_ORDER"/>
+		<result property="itemFlag" column="ITEM_FLAG"/>
+	</resultMap>
+
+	<resultMap id="boardCateList" type="egovframework.com.cop.bbs.service.BoardCateVO">
+		<result property="cateId" column="CATE_ID"/>
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="cateType" column="CATE_TYPE"/>
+		<result property="cateCode" column="CATE_CODE"/>
+		<result property="cateName" column="CATE_NAME"/>
+		<result property="cateOrder" column="CATE_ORDER"/>
+	</resultMap>
+
+	<insert id="insertBBSMaster" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO">
+		
+			INSERT INTO COMTNBBSMASTER
+			(BBS_ID, BBS_TY_CODE, BBS_NM, BBS_INTRCN, 
+			 REPLY_POSBL_AT, FILE_ATCH_POSBL_AT, ATCH_POSBL_FILE_NUMBER,
+			 ATCH_POSBL_FILE_SIZE, USE_AT,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, LAST_UPDUSR_ID, LAST_UPDT_PNTTM, BBS_ORDER, BBS_PAGE_UNIT, DELETE_FLAG, CATE_TYPE01, CATE_TYPE02, CATE_TYPE03, SKIN_ID,
+			 WRITE_BTN_FLAG, UPDATE_BTN_FLAG, DELETE_BTN_FLAG, REPLY_BTN_FLAG, SECRET_POSBL_AT, LOGIN_CHK_AT, NOTICE_POSBL_AT)
+			VALUES
+			( #{bbsId}, #{bbsTyCode}, #{bbsNm}, #{bbsIntrcn}, 
+			  #{replyPosblAt}, #{fileAtchPosblAt}, #{atchPosblFileNumber}, #{atchPosblFileSize}, 
+			  #{useAt}, #{frstRegisterId}, SYSDATE(), #{lastUpdusrId}, SYSDATE(),
+			  #{bbsOrder}, #{bbsPageUnit}, 'N', #{cateType01}, #{cateType02}, #{cateType03}, #{skinId},
+			  #{writeBtnFlag}, #{updateBtnFlag}, #{deleteBtnFlag}, #{replyBtnFlag}, #{secretPosblAt}, #{loginChkAt}, #{noticePosblAt}
+			 )			
+		
+	</insert>
+	
+	<select id="selectBBSMasterList" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
+				a.BBS_NM, a.BBS_INTRCN,
+				a.TMPLAT_ID, a.USE_AT, 
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				d.USER_NM AS FRST_REGISTER_NM, a.SKIN_ID
+			FROM
+				COMTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					COMTCCMMNDETAILCODE WHERE CODE_ID = 'COM101' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN
+				(SELECT ESNTL_ID, USER_ID, USER_NM FROM COMVNUSERMASTER) d
+				ON a.FRST_REGISTER_ID = d.ESNTL_ID
+			WHERE 1=1
+			AND
+				a.DELETE_FLAG = 'N'
+
+			<if test="searchCnd == 0">AND
+					(a.BBS_ID LIKE CONCAT ('%', #{searchWrd},'%') OR a.BBS_NM LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test="searchCnd == 1">AND
+					a.BBS_ID LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 2">AND
+					a.BBS_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+					
+			ORDER BY a.FRST_REGIST_PNTTM ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+						
+	</select>
+	
+	<select id="selectBBSMasterListTotCnt" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.BBS_ID)
+			FROM
+				COMTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					COMTCCMMNDETAILCODE WHERE CODE_ID = 'COM101' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN
+				(SELECT ESNTL_ID, USER_ID, USER_NM FROM COMVNUSERMASTER) d
+				ON a.FRST_REGISTER_ID = d.ESNTL_ID
+			WHERE 1=1
+			AND
+				a.DELETE_FLAG = 'N'
+
+			<if test="searchCnd == 0">AND
+					(a.BBS_ID LIKE CONCAT ('%', #{searchWrd},'%') OR a.BBS_NM LIKE CONCAT ('%', #{searchWrd},'%')) 		
+			</if>
+			<if test="searchCnd == 1">AND
+					a.BBS_ID LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 2">AND
+					a.BBS_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>	
+	</select>
+	
+	<select id="selectBBSMasterDetail" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO" resultMap="boardMasterDetail">
+		
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM, a.BBS_INTRCN, 
+				a.BBS_NM,
+				a.TMPLAT_ID, d.TMPLAT_NM, d.TMPLAT_COURS, a.FILE_ATCH_POSBL_AT, a.ATCH_POSBL_FILE_NUMBER,
+				a.ATCH_POSBL_FILE_SIZE, a.REPLY_POSBL_AT, a.FRST_REGISTER_ID, e.USER_NM as FRST_REGISTER_NM, a.CMMNTY_ID,
+				a.USE_AT, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM, BLOG_ID, a.BBS_ORDER, a.BBS_PAGE_UNIT				
+				,(SELECT IFNULL(USE_AT,'N') FROM COMTNBBSUSE 
+					WHERE BBS_ID = #{bbsId} 
+					AND TRGET_ID IN (#{uniqId}, 'SYSTEM_DEFAULT_BOARD')
+				) as AUTH_FLAG, a.CATE_TYPE01, a.CATE_TYPE02, a.CATE_TYPE03, a.SKIN_ID, a.WRITE_BTN_FLAG, a.UPDATE_BTN_FLAG,
+				a.DELETE_BTN_FLAG, a.REPLY_BTN_FLAG, a.SECRET_POSBL_AT, a.LOGIN_CHK_AT, a.NOTICE_POSBL_AT
+			FROM
+				COMTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM COMTCCMMNDETAILCODE WHERE CODE_ID = 'COM101' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN COMTNTMPLATINFO d
+				ON a.TMPLAT_ID = d.TMPLAT_ID				
+			LEFT OUTER JOIN COMVNUSERMASTER e
+				ON a.FRST_REGISTER_ID = e.ESNTL_ID		
+			WHERE a.BBS_ID = #{bbsId}
+						
+	</select>
+	
+ 	<update id="updateBBSMaster" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO">
+ 		
+			UPDATE COMTNBBSMASTER SET 
+				BBS_NM = #{bbsNm},
+				BBS_INTRCN = #{bbsIntrcn}, 
+				BBS_TY_CODE = #{bbsTyCode},
+				BBS_ORDER = #{bbsOrder},
+				BBS_PAGE_UNIT = #{bbsPageUnit},
+				REPLY_POSBL_AT = #{replyPosblAt},
+				FILE_ATCH_POSBL_AT = #{fileAtchPosblAt},
+				ATCH_POSBL_FILE_NUMBER = #{atchPosblFileNumber},
+				ATCH_POSBL_FILE_SIZE = #{atchPosblFileSize},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE(),
+				USE_AT = #{useAt},
+				CATE_TYPE01 = #{cateType01},
+				CATE_TYPE02 = #{cateType02},
+				CATE_TYPE03 = #{cateType03},
+				SKIN_ID = #{skinId},
+				WRITE_BTN_FLAG = #{writeBtnFlag},
+				UPDATE_BTN_FLAG = #{updateBtnFlag},
+				DELETE_BTN_FLAG = #{deleteBtnFlag},
+				REPLY_BTN_FLAG = #{replyBtnFlag},
+				SECRET_POSBL_AT = #{secretPosblAt},
+				LOGIN_CHK_AT = #{loginChkAt},
+				NOTICE_POSBL_AT = #{noticePosblAt}
+			WHERE BBS_ID = #{bbsId}
+ 		
+ 	</update>
+
+ 	<update id="deleteBBSMaster" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO">
+ 		
+			UPDATE COMTNBBSMASTER SET 
+				DELETE_FLAG = 'Y',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE()
+			WHERE BBS_ID = #{bbsId}
+ 		
+ 	</update>
+ 	
+ 	<select id="selectBlogMasterList" parameterType="egovframework.com.cop.bbs.service.BlogVO" resultMap="BlogList">
+		
+			SELECT 
+				a.BLOG_ID, a.BLOG_NM, a.USE_AT, a.REGIST_SE_CODE, 
+				c.CODE_NM as REGIST_SE_CODE_NM, 
+				DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM,
+				a.FRST_REGISTER_ID, 
+				b.USER_NM as FRST_REGISTER_NM,
+				a.BBS_ID, d.AUTHOR_CODE
+			FROM
+				COMTNBLOG a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON a.FRST_REGISTER_ID = b.ESNTL_ID
+			LEFT OUTER JOIN COMTCCMMNDETAILCODE c
+				ON a.REGIST_SE_CODE = c.CODE
+			LEFT OUTER JOIN COMTNEMPLYRSCRTYESTBS d
+				ON a.FRST_REGISTER_ID = d.SCRTY_DTRMN_TRGET_ID
+			WHERE c.CODE_ID = 'COM001'
+		
+			<if test="searchCnd == 0">AND
+					a.BLOG_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+					
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+						
+	</select>
+	
+	<select id="selectBlogMasterListTotCnt" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(*)
+			FROM
+				COMTNBLOG a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON a.FRST_REGISTER_ID = b.ESNTL_ID
+			LEFT OUTER JOIN COMTCCMMNDETAILCODE c
+				ON a.REGIST_SE_CODE = c.CODE
+			LEFT OUTER JOIN COMTNEMPLYRSCRTYESTBS d
+				ON a.FRST_REGISTER_ID = d.SCRTY_DTRMN_TRGET_ID
+			WHERE c.CODE_ID = 'COM001'
+			
+			<if test="searchCnd == 0">AND
+					a.BLOG_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			
+	</select>
+	
+	<select id="selectBlogDetail" parameterType="egovframework.com.cop.bbs.service.BlogVO" resultMap="selectBlogDetail">
+		
+			SELECT 
+				BLOG_ID, BBS_ID, BLOG_NM, BLOG_INTRCN
+			FROM
+				COMTNBLOG 
+			WHERE BLOG_ID = #{blogId}	
+			
+	</select>
+ 	
+ 	<select id="checkExistUser" parameterType="egovframework.com.cop.bbs.service.BlogVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(FRST_REGISTER_ID)
+			FROM
+				COMTNBLOG
+			WHERE FRST_REGISTER_ID = #{frstRegisterId} 
+		
+	</select>
+	
+ 	<select id="checkExistUser2" parameterType="egovframework.com.cop.bbs.service.BlogVO" resultMap="selectBlogUser">
+		
+			SELECT 
+				FRST_REGISTER_ID
+			FROM
+				COMTNBLOG
+			WHERE FRST_REGISTER_ID = #{frstRegisterId} 
+		
+	</select>
+	
+	<insert id="insertBoardBlogUserRqst" parameterType="egovframework.com.cop.bbs.service.BlogUser">
+
+			INSERT INTO COMTNBLOGUSER
+			(BLOG_ID, EMPLYR_ID, MNGR_AT, SBSCRB_DE,
+			MBER_STTUS, USE_AT, FRST_REGIST_PNTTM, FRST_REGISTER_ID)
+			VALUES (#{blogId}, #{emplyrId}, #{mngrAt}, SYSDATE(),
+			#{mberSttus}, #{useAt}, SYSDATE(), #{frstRegisterId})
+	
+	</insert>
+	
+	<insert id="insertBlogMaster" parameterType="egovframework.com.cop.bbs.service.BlogVO">
+		
+			INSERT INTO COMTNBLOG
+			(BLOG_ID, BLOG_NM, BLOG_INTRCN, REGIST_SE_CODE, 
+			 TMPLAT_ID, USE_AT, FRST_REGISTER_ID, FRST_REGIST_PNTTM, BBS_ID, BLOG_AT)
+			VALUES
+			(#{blogId}, #{blogNm}, #{blogIntrcn}, #{registSeCode}, 
+			 #{tmplatId}, #{useAt}, #{frstRegisterId}, SYSDATE(), #{bbsId}, #{blogAt})
+		
+	</insert>
+	
+	<select id="selectBlogListPortlet" parameterType="egovframework.com.cop.bbs.service.BlogVO" resultMap="BlogListPortlet">
+		
+			SELECT 
+				BLOG_ID, BBS_ID, BLOG_NM, FRST_REGIST_PNTTM
+			FROM
+				COMTNBLOG
+			WHERE USE_AT = 'Y'
+			ORDER BY FRST_REGIST_PNTTM DESC
+		
+	</select>
+	
+	<select id="selectBBSListPortlet" parameterType="egovframework.com.cop.bbs.service.BoardMasterVO" resultMap="BBSListPortlet">
+		
+			SELECT 
+				BBS_ID, BBS_TY_CODE, BBS_NM, FRST_REGIST_PNTTM
+			FROM
+				COMTNBBSMASTER
+			WHERE DELETE_FLAG = 'N' 
+			ORDER BY FRST_REGIST_PNTTM ASC
+		
+	</select>	
+	
+	<select id="selectBBSItemList" parameterType="egovframework.com.cop.bbs.service.BoardItemVO" resultMap="boardItemList">
+		SELECT 
+			ITEM_ID, BBS_ID, FIELD_ID, ITEM_NAME, ITEM_PERCENT, ITEM_ORDER, ITEM_FLAG, MOB_FLAG, SEARCH_FLAG
+		FROM
+			SPW_BBSITEM
+		WHERE 1=1
+		AND BBS_ID = #{bbsId}
+		AND ITEM_FLAG = #{itemFlag}
+		ORDER BY ITEM_ORDER*1 ASC
+						
+	</select>
+	
+	<select id="selectBBSItem" parameterType="egovframework.com.cop.bbs.service.BoardItemVO" resultMap="boardItemList">
+		SELECT 
+			ITEM_ID, BBS_ID, FIELD_ID, ITEM_NAME, ITEM_PERCENT, ITEM_ORDER, ITEM_FLAG
+		FROM
+			SPW_BBSITEM
+		WHERE 1=1 	
+		AND BBS_ID = #{bbsId}
+		AND ITEM_FLAG = #{itemFlag}
+		ORDER BY ITEM_ORDER ASC
+						
+	</select>	
+	
+	<select id="getBoardField" parameterType="BoardItemVO" resultType="BoardItemVO">
+		SELECT * FROM SPW_BBSFIELD ORDER BY FIELD_NAME ASC
+						
+	</select>
+	
+	<insert id="saveBBSItem" parameterType="egovframework.com.cop.bbs.service.BoardItemVO">
+		<selectKey resultType="string" keyProperty="itemId" order="BEFORE">
+			SELECT IFNULL(MAX(ITEM_ID),1)+1 AS ITEM_ID FROM SPW_BBSITEM
+		</selectKey>
+			INSERT INTO SPW_BBSITEM
+				(ITEM_ID, BBS_ID, FIELD_ID, ITEM_NAME, ITEM_PERCENT, ITEM_ORDER, ITEM_FLAG, MOB_FLAG, SEARCH_FLAG)
+			VALUES
+				(#{itemId}, #{bbsId}, #{fieldId}, #{itemName}, #{itemPercent}, #{itemOrder}, #{itemFlag}, #{mobFlag}, #{searchFlag})
+	
+	</insert>
+	
+	<delete id="bbsItemDelete" parameterType="BoardItemVO">
+		DELETE FROM SPW_BBSITEM
+		WHERE
+			BBS_ID = #{bbsId}
+		AND
+			ITEM_FLAG = #{itemFlag}
+	</delete>
+	
+	<select id="selectBBSCateList" parameterType="egovframework.com.cop.bbs.service.BoardCateVO" resultMap="boardCateList">
+		SELECT @RNUM := @RNUM + 1 AS ROWNUM, t.* FROM
+		(
+			SELECT 
+				CATE_ID, BBS_ID, CATE_TYPE, CATE_CODE, CATE_NAME, CATE_ORDER
+			FROM
+				SPW_BBSCATE
+			WHERE 1=1
+			AND BBS_ID = #{bbsId}
+			AND CATE_TYPE = #{cateType}
+			ORDER BY CATE_NAME ASC
+		)t, ( SELECT @RNUM := 0 ) R 
+		ORDER BY ROWNUM ASC
+						
+	</select>
+	
+	<select id="selectBBSCateListCnt" parameterType="egovframework.com.cop.bbs.service.BoardCateVO" resultType="java.lang.Integer">
+		SELECT
+			COUNT(CATE_ID)
+		FROM
+			SPW_BBSCATE
+		WHERE 1=1
+		AND BBS_ID = #{bbsId}
+		AND CATE_TYPE = #{cateType}
+	</select>
+
+	<insert id="saveBBSCate" parameterType="egovframework.com.cop.bbs.service.BoardCateVO">
+		<selectKey resultType="string" keyProperty="cateId" order="BEFORE">
+			SELECT IFNULL(MAX(CATE_ID),1)+1 AS CATE_ID FROM SPW_BBSCATE
+		</selectKey>
+			INSERT INTO SPW_BBSCATE
+				(CATE_ID, BBS_ID, CATE_TYPE, CATE_CODE, CATE_NAME, CATE_ORDER)
+			VALUES
+				(#{cateId}, #{bbsId}, #{cateType}, #{cateCode}, #{cateName}, #{cateOrder})
+	
+	</insert>
+	
+	<delete id="bbsCateDelete" parameterType="BoardCateVO">
+		DELETE FROM SPW_BBSCATE
+		WHERE
+			BBS_ID = #{bbsId}
+		AND
+			CATE_TYPE = #{cateType}
+	</delete>
+
+	<insert id="insertDefaultBBSItem" parameterType="BoardItemVO">
+		INSERT INTO SPW_BBSITEM
+			(ITEM_ID, BBS_ID, FIELD_ID, ITEM_NAME, ITEM_PERCENT, ITEM_ORDER, ITEM_FLAG, MOB_FLAG, SEARCH_FLAG)
+		VALUES
+			((SELECT IFNULL(MAX(a.ITEM_ID)+1,1) FROM SPW_BBSITEM a), #{bbsId}, #{fieldId}, #{itemName}, #{itemPercent}, #{itemOrder}, #{itemFlag}, #{mobFlag}, #{searchFlag})
+	</insert>
+	
+	<select id="selectCateName" parameterType="egovframework.com.cop.bbs.service.BoardCateVO" resultType="String">
+		SELECT 
+			CATE_NAME
+		FROM
+			SPW_BBSCATE
+		WHERE 1=1
+		AND BBS_ID = #{bbsId}
+		AND CATE_TYPE = #{cateType}
+		AND CATE_CODE = #{cateCode}
+	</select>
+
+	<insert id="insertDefaultBBSCate" parameterType="BoardCateVO">
+		INSERT INTO SPW_BBSCATE
+			(CATE_ID, BBS_ID, CATE_TYPE, CATE_CODE, CATE_NAME, CATE_ORDER)
+		VALUES
+			((SELECT IFNULL(MAX(a.CATE_ID)+1,1) FROM SPW_BBSCATE a), #{bbsId}, #{cateType}, #{cateCode}, #{cateName}, (SELECT IFNULL(MAX(a.CATE_ORDER*1)+1,1) FROM SPW_BBSCATE a WHERE a.BBS_ID = #{bbsId}))
+	</insert>
+	
+	<delete id="minutesCateDelete" parameterType="BoardCateVO">
+		DELETE FROM SPW_BBSCATE
+		WHERE
+			BBS_ID = #{bbsId}
+		AND
+			CATE_TYPE = #{cateType}
+		AND
+			CATE_CODE = #{cateCode}
+	</delete>
+
+</mapper>
